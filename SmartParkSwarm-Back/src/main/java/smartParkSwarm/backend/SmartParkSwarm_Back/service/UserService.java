@@ -22,5 +22,4 @@ public class UserService {
         this.adminRepository = adminRepository;
     }
 
-
 }
