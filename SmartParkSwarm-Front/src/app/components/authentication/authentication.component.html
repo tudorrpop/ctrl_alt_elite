@@ -1,1 +1,32 @@
-<p>authentication works!</p>
+
+<div class="app-container">
+    <div class="authentication-card">
+
+        <div class="header">
+            <p *ngIf="login" class="welcome-text">Welcome Back!</p>
+            <p *ngIf="!login" class="welcome-text">Glad To See You Joining!</p>
+
+            <p *ngIf="login" class="signup-text">
+                Don't have an account? 
+                <span class="signup-button" (click)="changePerspective()">Create one now!</span>
+            </p>
+            <p *ngIf="!login" class="signup-text">
+                Already have an account? 
+                <span class="signup-button" (click)="changePerspective()">Login now!</span>
+            </p>
+        </div>
+
+        <div class="body">
+            <label for="username">Username</label>
+            <input pInputText id="username" placeholder="Enter your username" [(ngModel)]="username">
+            
+            <label for="password">Password</label>
+            <div style="width: 100%;">
+                <p-password id="password" [toggleMask]="true" placeholder="Enter your password" [(ngModel)]="password"></p-password>
+            </div>
+        </div>
+
+        <button *ngIf="login" pButton class="w-full p-button-outlined" label="Login" icon="pi pi-user" iconPos="right" severity="contrast" (click)="loginUser()"></button>
+        <button *ngIf="!login" pButton class="w-full p-button-outlined" label="Register" icon="pi pi-user" iconPos="right" severity="contrast" (click)="registerUser()"></button>
+    </div>
+</div>

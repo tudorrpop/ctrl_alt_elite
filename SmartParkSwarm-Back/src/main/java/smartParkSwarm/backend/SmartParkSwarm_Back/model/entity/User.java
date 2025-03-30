@@ -32,4 +32,6 @@ public abstract class User {
     public Role getRole() {
         return role;
     }
+
+    public abstract Long getId();
 }

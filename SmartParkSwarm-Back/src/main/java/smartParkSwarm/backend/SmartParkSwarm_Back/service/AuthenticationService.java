@@ -7,6 +7,7 @@ import smartParkSwarm.backend.SmartParkSwarm_Back.model.entity.Admin;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.entity.Customer;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.entity.User;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.request.AuthenticationRequest;
+import smartParkSwarm.backend.SmartParkSwarm_Back.model.response.UserOverviewModel;
 import smartParkSwarm.backend.SmartParkSwarm_Back.repository.AdminRepository;
 import smartParkSwarm.backend.SmartParkSwarm_Back.repository.CustomerRepository;
 import smartParkSwarm.backend.SmartParkSwarm_Back.utility.JwtUtil;
@@ -27,25 +28,31 @@ public class AuthenticationService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public String register(AuthenticationRequest request) {
+    public UserOverviewModel register(AuthenticationRequest request) {
         String encodedPassword = passwordEncoder.encode(request.getPassword());
 
+        User user;
         if (request.getRole() == Role.CUSTOMER) {
             if (customerRepository.findCustomerByUsername(request.getUsername()).isPresent()) {
                 throw new RuntimeException("Customer already exists");
             }
-            customerRepository.save(new Customer(request.getUsername(), encodedPassword, request.getRole()));
+            user = customerRepository.save(new Customer(request.getUsername(), encodedPassword, request.getRole()));
         } else {
             if (adminRepository.findAdminByUsername(request.getUsername()).isPresent()) {
                 throw new RuntimeException("Admin already exists");
             }
-            adminRepository.save(new Admin(request.getUsername(), encodedPassword, request.getRole()));
+            user = adminRepository.save(new Admin(request.getUsername(), encodedPassword, request.getRole()));
         }
 
-        return jwtUtil.generateToken(request.getUsername(), request.getRole());
+        return new UserOverviewModel(
+                user.getId(),
+                user.getUsername(),
+                user.getRole().toString(),
+                jwtUtil.generateToken(request.getUsername(), request.getRole())
+        );
     }
 
-    public String login(AuthenticationRequest request) {
+    public UserOverviewModel login(AuthenticationRequest request) {
         Optional<User> user;
 
         if (request.getRole() == Role.CUSTOMER) {
@@ -58,6 +65,11 @@ public class AuthenticationService {
             throw new RuntimeException("Invalid username or password");
         }
 
-        return jwtUtil.generateToken(user.get().getUsername(), user.get().getRole());
+        return new UserOverviewModel(
+                user.get().getId(),
+                user.get().getUsername(),
+                user.get().getRole().toString(),
+                jwtUtil.generateToken(user.get().getUsername(), user.get().getRole())
+        );
     }
 }

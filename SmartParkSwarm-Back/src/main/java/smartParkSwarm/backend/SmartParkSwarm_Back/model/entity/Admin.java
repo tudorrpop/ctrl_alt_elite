@@ -22,4 +22,9 @@ public class Admin extends User implements Serializable {
 
     public Admin(){}
 
+    @Override
+    public Long getId() {
+        return id;
+    }
+
 }

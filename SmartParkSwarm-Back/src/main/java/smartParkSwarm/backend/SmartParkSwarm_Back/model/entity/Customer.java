@@ -22,4 +22,8 @@ public class Customer extends User implements Serializable {
 
     public Customer (){}
 
+    @Override
+    public Long getId() {
+        return id;
+    }
 }
