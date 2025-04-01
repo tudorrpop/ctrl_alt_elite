@@ -1,1 +1,23 @@
-/* You can add global styles to this file, and also import other style files */
+html, body{
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+ 
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+/* Light-Theme for the App */
+@media (prefers-color-scheme: dark) {
+    html {
+      background-color: #fff !important; /* Set a light background */
+      color: #333 !important; /* Set dark text for contrast */
+    }
+  }
+  
+  /* Optional: You can add this rule to apply to everything */
+  html {
+    background-color: #fff !important;  /* Light theme background */
+    color: #333 !important;  /* Dark text for light theme */
+  }

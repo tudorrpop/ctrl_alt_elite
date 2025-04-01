@@ -1,0 +1,36 @@
+
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container-fluid">
+      <p style="font-size: 25px; padding-top: 10px; color: white;">LOGO</p>
+  
+      <!-- Right-aligned buttons -->
+      <div class="navbar-collapse justify-content-end">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" (click)="goDashboard()">  
+              <i style="font-size: 20px;" class="pi pi-bars"></i>
+              <span style="font-family: 'Arial', sans-serif; font-size: 20px;"> Dashboard</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link">
+              <i style="font-size: 20px;" class="pi pi-bell"></i>
+              <span style="font-family: 'Arial', sans-serif; font-size: 20px;"> Notifications</span>
+            </a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i style="font-size: 20px;" class="fa-regular fa-user"></i>
+              <span style="font-family: 'Arial', sans-serif; font-size: 20px;"> {{ username }} </span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" (click)="showProfile()">My profile</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" (click)="logout()"><i class="fa-regular fa-arrow-right-from-bracket"></i> Sign out</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  

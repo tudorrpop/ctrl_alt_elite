@@ -1,0 +1,69 @@
+
+.app-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f4f8;
+}
+
+.authentication-card {
+    width: 500px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.welcome-text {
+    font-size: 30px;
+    font-weight: bold;
+    color: #333;
+}
+
+.signup-text {
+    font-size: 15px;
+    color: #888;
+}
+
+.signup-button {
+    color: #888; 
+    cursor: pointer;
+    font-weight: bold;
+    transition: color 0.2s ease-in-out;
+}
+
+.signup-button:hover {
+    color: #656464; 
+}
+
+input {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+p-password, input {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.body {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+/* Responsive layout */
+@media (max-width: 600px) {
+    .authentication-card {
+        width: 90%;
+        padding: 15px;
+    }
+}
