@@ -1,22 +1,21 @@
 package smartParkSwarm.backend.SmartParkSwarm_Back.utility;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.Role;
-
-import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 
 @Component
 public class JwtUtil {
-    private static final String SECRET_KEY = "yourSecretKeyYourSecretKeyYourSecretKey"; // !at least 256 bits!
-    private static final long EXPIRATION_TIME = 86400000;
-    private final Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+
+    private static final String SECRET_KEY = "0eIUP48hB1dwsKLfnQx0PxRMobEp1FmA";
+    private static final long EXPIRATION_TIME = 86400000; // 1 day
 
     public String generateToken(String username, Role role) {
         return Jwts.builder()
@@ -24,34 +23,42 @@ public class JwtUtil {
                 .claim("role", role.name())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .signWith(key, SignatureAlgorithm.HS256)
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    private SecretKey getSigningKey() {
-        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(SECRET_KEY));
+    private Key getSigningKey() {
+        byte[] keyBytes = SECRET_KEY.getBytes(StandardCharsets.UTF_8);
+        return new SecretKeySpec(keyBytes, SignatureAlgorithm.HS256.getJcaName());
     }
 
-
     public String extractUsername(String token) {
-        Claims claims = Jwts.parser()
-                .verifyWith(getSigningKey())
+        return getClaims(token).getSubject();
+    }
+
+    public boolean validateToken(String token) {
+        try {
+            Claims claims = getClaims(token);
+            return !isTokenExpired(claims);
+        } catch (JwtException e) {
+            return false;
+        }
+    }
+
+    private boolean isTokenExpired(Claims claims) {
+        return claims.getExpiration().before(new Date());
+    }
+
+    private Claims getClaims(String token) {
+        return Jwts.parser()
+                .setSigningKey(getSigningKey())
                 .build()
-                .parseSignedClaims(token)
-                .getPayload();
-        return claims.getSubject();
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     public String extractRole(String token) {
-        Claims claims = Jwts.parser()
-                .verifyWith(getSigningKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
-        return claims.get("role", String.class);
+        return getClaims(token).get("role", String.class);
     }
 
-    public boolean validateToken(String token, String username) {
-        return extractUsername(token).equals(username);
-    }
 }

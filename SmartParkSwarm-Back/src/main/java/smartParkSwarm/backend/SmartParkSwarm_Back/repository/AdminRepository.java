@@ -3,7 +3,6 @@ package smartParkSwarm.backend.SmartParkSwarm_Back.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.entity.Admin;
-import smartParkSwarm.backend.SmartParkSwarm_Back.model.entity.User;
 
 import java.util.Optional;
 

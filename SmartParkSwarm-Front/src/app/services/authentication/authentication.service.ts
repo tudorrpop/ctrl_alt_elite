@@ -50,7 +50,11 @@ export class AuthenticationService {
   }
 
   public logout(): void {
-    
+    this.cookieService.deleteAll();
+  }
+
+  public getUsername(): string {
+    return this.cookieService.get('username');
   }
 
 }

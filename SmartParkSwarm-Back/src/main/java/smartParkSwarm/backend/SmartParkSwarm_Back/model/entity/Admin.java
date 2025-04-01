@@ -8,7 +8,6 @@ import smartParkSwarm.backend.SmartParkSwarm_Back.model.Role;
 import java.io.Serializable;
 
 @Entity
-@Getter
 public class Admin extends User implements Serializable {
 
     @Id

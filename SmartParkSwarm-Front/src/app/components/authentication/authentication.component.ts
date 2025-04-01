@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { FormsModule } from '@angular/forms';
@@ -22,7 +22,7 @@ import { Router } from '@angular/router';
   templateUrl: './authentication.component.html',
   styleUrl: './authentication.component.scss'
 })
-export class AuthenticationComponent implements OnInit{
+export class AuthenticationComponent{
 
   username!: string;
   password!: string;
@@ -34,9 +34,6 @@ export class AuthenticationComponent implements OnInit{
     private messageService: MessageService,
     private router: Router
   ) {}
-
-  public ngOnInit(): void {
-  }
 
   public changePerspective(): void {
     this.login = !this.login; 
@@ -60,7 +57,7 @@ export class AuthenticationComponent implements OnInit{
         this.messageService.add({
           severity: 'success',
           summary: 'Successful Registration!',
-          detail: `Glad to have you here ${userOverviewModel.username}!`,
+          detail: `Glad to have you here, ${userOverviewModel.username}!`,
         });
       },
 
@@ -92,24 +89,16 @@ export class AuthenticationComponent implements OnInit{
       this.messageService.add({
         severity: 'success',
         summary: 'Successful Login!',
-        detail: `Glad to see you back ${userOverviewModel.username}!`,
+        detail: `Glad to see you back, ${userOverviewModel.username}!`,
       });
     },
 
-    error: (error) => {
-      if (error.status === 403) {
+    error: () => {
         this.messageService.add({
           severity: 'error',
           summary: 'Login Failed!',
           detail: 'Invalid username or password.',
         });
-      } else {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error!',
-          detail: 'Something went wrong. Please try again.',
-        });
-      }
     }
   });
 }

@@ -8,7 +8,6 @@ import smartParkSwarm.backend.SmartParkSwarm_Back.model.Role;
 import java.io.Serializable;
 
 @Entity
-@Getter
 public class Customer extends User implements Serializable {
 
     @Id
@@ -20,7 +19,7 @@ public class Customer extends User implements Serializable {
         super(username, password, role);
     }
 
-    public Customer (){}
+    public Customer(){}
 
     @Override
     public Long getId() {

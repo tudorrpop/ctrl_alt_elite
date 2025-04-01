@@ -1,11 +1,8 @@
 package smartParkSwarm.backend.SmartParkSwarm_Back.model.entity;
 
 import jakarta.persistence.MappedSuperclass;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.Role;
 
-@Getter
 @MappedSuperclass
 public abstract class User {
 

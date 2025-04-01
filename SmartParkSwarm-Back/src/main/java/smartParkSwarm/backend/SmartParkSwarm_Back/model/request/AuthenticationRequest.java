@@ -1,7 +1,5 @@
 package smartParkSwarm.backend.SmartParkSwarm_Back.model.request;
 
-import lombok.Getter;
-import lombok.Setter;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.Role;
 
 public class AuthenticationRequest {

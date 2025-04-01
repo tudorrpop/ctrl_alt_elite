@@ -4,7 +4,7 @@
 
         <div class="header">
             <p *ngIf="login" class="welcome-text">Welcome Back!</p>
-            <p *ngIf="!login" class="welcome-text">Glad To See You Joining!</p>
+            <p *ngIf="!login" class="welcome-text">Welcome Aboard!</p>
 
             <p *ngIf="login" class="signup-text">
                 Don't have an account? 
@@ -21,9 +21,9 @@
             <input pInputText id="username" placeholder="Enter your username" [(ngModel)]="username">
             
             <label for="password">Password</label>
-            <div style="width: 100%;">
-                <p-password id="password" [toggleMask]="true" placeholder="Enter your password" [(ngModel)]="password"></p-password>
-            </div>
+            <p-password *ngIf="!login" inputStyleClass="w-full" styleClass="w-full" id="password" [toggleMask]="true" placeholder="Enter your password" [(ngModel)]="password"></p-password>
+            <input pInputText *ngIf="login" type="password" id="password" placeholder="Enter your password" [(ngModel)]="password">
+            
         </div>
 
         <button *ngIf="login" pButton class="w-full p-button-outlined" label="Login" icon="pi pi-user" iconPos="right" severity="contrast" (click)="loginUser()"></button>
