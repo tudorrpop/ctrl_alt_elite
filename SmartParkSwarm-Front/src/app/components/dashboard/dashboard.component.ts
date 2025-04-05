@@ -9,6 +9,7 @@ import { ButtonModule } from 'primeng/button';
 import { StoreCreationComponent } from '../dialog/store-creation/store-creation.component';
 import { DialogService } from 'primeng/dynamicdialog';
 import { MessageService } from 'primeng/api';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -30,6 +31,7 @@ export class DashboardComponent implements OnInit{
   stores!: StoreOverviewModel[];
 
   constructor(
+    private router: Router,
     private storeService: StoreService,
     private dialogService: DialogService,
     private messageService: MessageService
@@ -39,12 +41,14 @@ export class DashboardComponent implements OnInit{
     this.storeService.fetchStores().subscribe({
       next: (response) => {
         this.stores = response;
+        console.log(response);
+        
       }
     });
   }
 
-  public navigateToStore(): void {
-    
+  public navigateToStore(storeId: number): void {
+    this.router.navigate([`/store/${storeId}`]);
   }
 
   public createStore(): void {
