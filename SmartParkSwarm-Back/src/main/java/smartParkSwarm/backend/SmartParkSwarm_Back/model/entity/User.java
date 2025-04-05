@@ -1,7 +1,7 @@
 package smartParkSwarm.backend.SmartParkSwarm_Back.model.entity;
 
 import jakarta.persistence.MappedSuperclass;
-import smartParkSwarm.backend.SmartParkSwarm_Back.model.Role;
+import smartParkSwarm.backend.SmartParkSwarm_Back.model.enums.Role;
 
 @MappedSuperclass
 public abstract class User {

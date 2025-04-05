@@ -2,9 +2,13 @@
     <app-navbar></app-navbar>
 
     <div class="content">
-        <h4 style="font-size: 45px; font-weight: bold; margin: 0">
-            Overview
-        </h4>
+
+        <div class="submenu">
+            <h4 style="font-size: 45px; font-weight: bold; margin: 0">
+                Overview
+            </h4>
+            <p-button label="New Store" variant="outlined" icon="pi pi-shop" iconPos="right" severity="success" (click)="createStore()"/>
+        </div>
 
         <div class="tabs">
             <p-tabs value="0">

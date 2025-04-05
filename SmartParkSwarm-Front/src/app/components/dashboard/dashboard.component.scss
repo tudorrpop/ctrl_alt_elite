@@ -7,6 +7,12 @@
     background-color: white;
 }
 
+.submenu {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
 .content{
     flex: 1 0 0;
     display: flex;

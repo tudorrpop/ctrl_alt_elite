@@ -1,9 +1,7 @@
 package smartParkSwarm.backend.SmartParkSwarm_Back.model.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import smartParkSwarm.backend.SmartParkSwarm_Back.model.Role;
+import smartParkSwarm.backend.SmartParkSwarm_Back.model.enums.Role;
 
 import java.io.Serializable;
 

@@ -1,0 +1,86 @@
+.dialog {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    width: 700px;
+    margin: 0 auto;
+}
+
+.dialog-header {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.storeName, .storeAddress {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.parkingLayout {
+    display: flex;
+    flex: 1 0 0;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.parkingLayoutButtons {
+    display: flex;
+    flex: 1 0 0;
+    flex-direction: row;
+    gap: 10px;
+}
+
+label {
+    font-size: 16px;
+    color: #555;
+}
+
+input {
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.buttons {
+    display: flex;
+    width: 100%;
+    gap: 20px;
+}
+
+.buttons button {
+    flex: 1; 
+    max-width: 50%;
+}
+
+
+// Layout Selection Dialog
+
+.layout-options {
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;
+}
+
+.layout-item {
+    text-align: center;
+    cursor: pointer;
+    padding-top: 5px;
+    transition: transform 0.2s;
+}
+
+.layout-item:hover {
+    transform: scale(1.05);
+}
+
+.layout-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
+    object-fit: cover;
+}

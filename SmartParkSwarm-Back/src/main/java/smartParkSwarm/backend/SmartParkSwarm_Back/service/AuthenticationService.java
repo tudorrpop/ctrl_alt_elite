@@ -2,7 +2,7 @@ package smartParkSwarm.backend.SmartParkSwarm_Back.service;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import smartParkSwarm.backend.SmartParkSwarm_Back.model.Role;
+import smartParkSwarm.backend.SmartParkSwarm_Back.model.enums.Role;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.entity.Admin;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.entity.Customer;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.entity.User;
