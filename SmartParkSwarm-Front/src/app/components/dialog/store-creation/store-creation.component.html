@@ -1,0 +1,38 @@
+<div class="dialog">
+    <h2 class="dialog-header">Store Details</h2>
+    <div class="storeName">
+        <label for="storeName">Store Name:</label>
+        <input pInputText id="storeName" [(ngModel)]="storeName" placeholder="Enter the name" />
+    </div>
+    <div class="storeAddress">
+        <label for="storeAddress">Store Address:</label>
+        <input pInputText id="storeAddress" [(ngModel)]="storeAddress" placeholder="Enter the address" />
+    </div>
+    <div class="parkingLayout">
+        <label for="parkingLayout">Parking Layout:</label>
+        <div class="parkingLayoutButtons">
+            <input pInputText id="parkingLayout"  style="font-style: italic;" [disabled]="true" [(ngModel)]="parkingLayout" placeholder="- no selection -" />
+            <p-button label="Select Layout" severity="secondary" icon="pi pi-objects-column" iconPos="right" (click)="openLayoutDialog()" class="button-cancel"/>    
+        </div>
+    </div>
+
+    
+    <div class="buttons">
+        <button pButton label="Cancel" severity="danger" (click)="cancelAction()" class="button-cancel p-button-outlined"></button>
+        <button pButton  label="Save" [disabled]="!storeName || !storeAddress || !parkingLayout" 
+            [pTooltip]="(!storeName || !storeAddress || !parkingLayout) ? 'All fields required!' : undefined"tooltipPosition="bottom"
+            (click)="saveAction()" class="button-save p-button-outlined"></button>
+    </div>
+</div>
+
+
+<!-- Layout Selection Dialog -->
+<p-dialog [(visible)]="layoutSelectionDialog" [closable]="true" modal="true" header="Select Parking Layout" [style]="{width: '400px'}" (onHide)="layoutSelectionDialog = false">
+    <div class="layout-options">
+        <div *ngFor="let layout of layouts" class="layout-item" (click)="selectLayout(layout.name)">
+            <img [src]="layout.image" [alt]="layout.name" class="layout-image">
+            <p>{{ layout.name }}</p>
+        </div>
+    </div>
+</p-dialog>
+

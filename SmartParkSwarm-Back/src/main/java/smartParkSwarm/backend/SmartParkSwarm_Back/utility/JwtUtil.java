@@ -5,7 +5,7 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.stereotype.Component;
-import smartParkSwarm.backend.SmartParkSwarm_Back.model.Role;
+import smartParkSwarm.backend.SmartParkSwarm_Back.model.enums.Role;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;

@@ -1,6 +1,6 @@
 package smartParkSwarm.backend.SmartParkSwarm_Back.model.request;
 
-import smartParkSwarm.backend.SmartParkSwarm_Back.model.Role;
+import smartParkSwarm.backend.SmartParkSwarm_Back.model.enums.Role;
 
 public class AuthenticationRequest {
     private String username;

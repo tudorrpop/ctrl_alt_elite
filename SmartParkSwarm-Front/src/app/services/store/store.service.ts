@@ -1,8 +1,9 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { Observable } from 'rxjs';
 import { StoreOverviewModel } from '../../data/model/store-overview.model';
+import { StoreRequest } from '../../data/request/store.request';
 
 @Injectable({
   providedIn: 'root'
@@ -21,11 +22,21 @@ export class StoreService {
     return new HttpHeaders().set('Authorization', `Bearer ${token}`);
   }
 
-  public getStores(): Observable<StoreOverviewModel[]> {
+  public fetchStores(): Observable<StoreOverviewModel[]> {
     const headers = this.getAuthHeaders();    
     
     return this.httpClient.get<StoreOverviewModel[]>(
       `${this.baseUrl}/stores`, 
+      { headers, withCredentials: true }
+    );
+  }
+
+  public createStore(storeRequest: StoreRequest): Observable<StoreOverviewModel> {
+    const headers = this.getAuthHeaders();    
+    
+    return this.httpClient.post<StoreOverviewModel>(
+      `${this.baseUrl}/stores`, 
+      storeRequest,
       { headers, withCredentials: true }
     );
   }
