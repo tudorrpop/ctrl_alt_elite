@@ -4,6 +4,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { Observable } from 'rxjs';
 import { StoreOverviewModel } from '../../data/model/store-overview.model';
 import { StoreRequest } from '../../data/request/store.request';
+import { StoreModel } from '../../data/model/store.model';
 
 @Injectable({
   providedIn: 'root'
@@ -37,6 +38,15 @@ export class StoreService {
     return this.httpClient.post<StoreOverviewModel>(
       `${this.baseUrl}/stores`, 
       storeRequest,
+      { headers, withCredentials: true }
+    );
+  }
+
+  public fetchStore(storeId: number): Observable<StoreModel> {
+    const headers = this.getAuthHeaders();    
+    
+    return this.httpClient.get<StoreModel>(
+      `${this.baseUrl}/stores/${storeId}`, 
       { headers, withCredentials: true }
     );
   }

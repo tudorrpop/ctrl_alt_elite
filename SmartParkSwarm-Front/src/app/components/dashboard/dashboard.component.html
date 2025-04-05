@@ -37,8 +37,9 @@
                                         height: '100px',
                                         position: 'relative',
                                         cursor: 'pointer'}" 
-                                        (click)="navigateToStore()">
+                                        (click)="navigateToStore(store.storeId)">
                                         <ng-template #title>{{ store.storeName }} </ng-template>
+                                        <ng-template #subtitle>{{ store.storeAddress }} </ng-template>
                                     </p-card>
                                 </div>
                             </div>

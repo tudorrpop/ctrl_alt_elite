@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { FormsModule } from '@angular/forms';
@@ -34,6 +34,17 @@ export class AuthenticationComponent{
     private messageService: MessageService,
     private router: Router
   ) {}
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      if(this.login) {
+        this.loginUser();
+      } else {
+        this.registerUser();
+      }
+    }
+  }
 
   public changePerspective(): void {
     this.login = !this.login; 
