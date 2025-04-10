@@ -9,7 +9,7 @@ import {StorageService} from "./storage.service";
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:8083';
+  private apiUrl = 'http://192.168.1.129:8083';
 
   constructor(private http: HttpClient, private storageService: StorageService) {}
 

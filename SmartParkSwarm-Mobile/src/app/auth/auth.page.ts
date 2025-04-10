@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -13,6 +13,7 @@ import {
 } from '@ionic/angular/standalone';
 import {AuthService} from "../services/auth.service";
 import {IAuthRequest} from "../models/i-auth-request.model";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-auth',
@@ -29,14 +30,15 @@ export class AuthPage {
     role: 'CUSTOMER'
   };
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   submit() {
     if (this.isLogin) {
       this.authService.login(this.authData).subscribe({
         next: (res) => {
-          console.log('Logged in:', res);
-          // Save token to storage
+          this.router.navigate(['/tabs/tab1']).then(() => {
+            console.log('Navigation complete');
+          });
         },
         error: (err) => {
           console.error('Login failed', err);
