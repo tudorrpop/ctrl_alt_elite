@@ -8,6 +8,7 @@ import smartParkSwarm.backend.SmartParkSwarm_Back.model.request.StoreRequest;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.response.ParkingSpotStatus;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.response.StoreModel;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.response.StoreOverviewModel;
+import smartParkSwarm.backend.SmartParkSwarm_Back.service.StoreService;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -20,41 +21,42 @@ import java.util.concurrent.TimeUnit;
 @RestController
 public class StoreController {
 
-    @Autowired
     private final SseController sseController;
 
-    @Autowired
-    public StoreController(SseController sseController){
+    private final StoreService storeService;
+
+    public StoreController(SseController sseController, StoreService storeService) {
         this.sseController = sseController;
+        this.storeService = storeService;
     }
 
     @GetMapping("/stores")
     public ResponseEntity<List<StoreOverviewModel>> fetchStores() {
-        List<StoreOverviewModel> stores = new ArrayList<>();
-
-        stores.add(new StoreOverviewModel(1L, "Kaufland Timisoara Fabric", "Strada Mihail Kogălniceanu 11, Timișoara 300126"));
-        stores.add(new StoreOverviewModel(2L, "Kaufland Timisoara-Dumbravita", "Strada Conac 51, Timișoara 307160"));
-        stores.add(new StoreOverviewModel(3L, "KauflandTimisoara-Elisabetin", "Strada Damaschin Bojinca 4, Timișoara 300216"));
-        stores.add(new StoreOverviewModel(5L, "Kaufland Timisoara Vidrighin", "Strada Chimiștilor, Calea Stan Vidrighin 5-9, Timișoara 300571"));
-
+        List<StoreOverviewModel> stores = storeService.getStores();
         return ResponseEntity.ok(stores);
     }
 
     @PostMapping("/stores")
     public ResponseEntity<StoreOverviewModel> createStore(@RequestBody StoreRequest storeRequest) {
-        // Should return a StoreOverviewModel after save
-        return ResponseEntity.ok(new StoreOverviewModel(2L, storeRequest.getStoreName(), storeRequest.getStoreAddress()));
+        StoreOverviewModel storeOverviewModel=  storeService.saveStore(storeRequest);
+        return ResponseEntity.ok(storeOverviewModel);
     }
 
-    @GetMapping("/stores/{storeId}")
-    public ResponseEntity<StoreModel> fetchStore(@PathVariable Long storeId) throws IOException {
-        // Should return a StoreModel
-        StoreModel store = new StoreModel(
-                3L,
-                "Kaufland Timisoara Fabric",
-                "Strada Mihail Kogălniceanu 11, Timișoara 300126",
-                ""
-        );
+    @PutMapping("/stores/{id}")
+    public ResponseEntity<StoreOverviewModel> edit(@PathVariable Long id, @RequestBody StoreRequest storeRequest) {
+        StoreOverviewModel updatedStore = storeService.editStore(id, storeRequest);
+        return ResponseEntity.ok(updatedStore);
+    }
+
+    @DeleteMapping("/stores/{id}")
+    public ResponseEntity<StoreOverviewModel> delete(@PathVariable Long id) {
+        storeService.deleteStore(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/stores/{id}")
+    public ResponseEntity<StoreModel> fetchStore(@PathVariable Long id) {
+        StoreModel store = storeService.getStoreById(id);
         return ResponseEntity.ok(store);
     }
 
