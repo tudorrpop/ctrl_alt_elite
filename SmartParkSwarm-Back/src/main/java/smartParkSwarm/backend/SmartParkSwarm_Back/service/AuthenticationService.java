@@ -12,6 +12,7 @@ import smartParkSwarm.backend.SmartParkSwarm_Back.repository.AdminRepository;
 import smartParkSwarm.backend.SmartParkSwarm_Back.repository.CustomerRepository;
 import smartParkSwarm.backend.SmartParkSwarm_Back.utility.JwtUtil;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -36,7 +37,7 @@ public class AuthenticationService {
             if (customerRepository.findCustomerByUsername(request.getUsername()).isPresent()) {
                 throw new RuntimeException("Customer already exists");
             }
-            user = customerRepository.save(new Customer(request.getUsername(), encodedPassword, request.getRole()));
+            user = customerRepository.save(new Customer(request.getUsername(), encodedPassword, LocalDate.now(), request.getRole()));
         } else {
             if (adminRepository.findAdminByUsername(request.getUsername()).isPresent()) {
                 throw new RuntimeException("Admin already exists");
