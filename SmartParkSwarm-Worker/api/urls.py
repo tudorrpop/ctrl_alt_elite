@@ -9,4 +9,5 @@ urlpatterns = [
     path('VehicleEntry/', views.VehicleEntryList.as_view()),
     path('VehicleEntry/<uuid:pk>/', views.VehicleEntryDetail.as_view()),
     path('VehicleEntry/exit/<str:qr_code>/', views.VehicleExitView.as_view(), name='vehicle-exit'),
+    path('metrics/<str:metric_name>', views.MetricFileView.as_view(), name='metric-file'),
 ]

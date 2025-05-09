@@ -1,8 +1,10 @@
 from django.utils.timezone import now
-from rest_framework import generics, views, response
+from django.utils.dateparse import parse_datetime
+from rest_framework import generics, views, response, status
 from django import http
 from .models import ParkingLot, ParkingSpot, VehicleEntry
 from .serializers import ParkingLotSerializer, ParkingSpotSerializer, VehicleEntrySerializer
+import os
 
 class ParkingLotSetup(generics.CreateAPIView):
     """
@@ -70,9 +72,26 @@ class VehicleEntryList(generics.ListCreateAPIView):
 
     def get_queryset(self):
         queryset = VehicleEntry.objects.all()
+        
+        # Filter by parking spot if provided
         parkingspot = self.request.query_params.get('parkingspot')
-        if parkingspot is not None:
-            queryset = queryset.filter(spot_id=parkingspot)
+        if parkingspot:
+            queryset = queryset.filter(spot_uuid=parkingspot)
+
+        # Filter by time interval if provided
+        start_time = self.request.query_params.get('start_time')
+        end_time = self.request.query_params.get('end_time')
+        
+        if start_time:
+            parsed_start = parse_datetime(start_time)
+            if parsed_start:
+                queryset = queryset.filter(exit_time__gte=parsed_start) | queryset.filter(exit_time__isnull=True)
+        
+        if end_time:
+            parsed_end = parse_datetime(end_time)
+            if parsed_end:
+                queryset = queryset.filter(entry_time__lte=parsed_end)
+
         return queryset
     
     def create(self, request, *args, **kwargs):
@@ -130,3 +149,29 @@ class VehicleExitView(generics.UpdateAPIView):
         spot.save()
 
         return response.Response({'message': 'Vehicle exit registered successfully.'}, status=200)
+    
+class MetricFileView(views.APIView):
+    """
+    Serve a specific CSV metric file by name using DRF Response.
+    """
+
+    def get(self, request, metric_name):
+        print(metric_name)
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        file_path = os.path.join(base_dir, '..', 'metrics', f'{metric_name}.csv')
+        print(file_path)
+
+        if not os.path.exists(file_path):
+            return response.Response(
+                {"detail": "Metric file not found."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        with open(file_path, 'r') as file:
+            csv_data = file.read()
+
+        return response.Response(
+            csv_data,
+            content_type='text/csv',
+            status=status.HTTP_200_OK
+        )
