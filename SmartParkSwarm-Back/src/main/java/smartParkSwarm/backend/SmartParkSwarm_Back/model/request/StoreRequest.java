@@ -7,6 +7,12 @@ public class StoreRequest {
     private String storeAddress;
     private String parkingLayout;
 
+    public StoreRequest(String storeName, String storeAddress, String parkingLayout) {
+        this.storeName = storeName;
+        this.storeAddress = storeAddress;
+        this.parkingLayout = parkingLayout;
+    }
+
     public String getStoreName() {
         return storeName;
     }
