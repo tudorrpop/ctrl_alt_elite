@@ -4,15 +4,19 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.request.StoreRequest;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.response.ParkingSpotStatus;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.response.StoreModel;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.response.StoreOverviewModel;
+import smartParkSwarm.backend.SmartParkSwarm_Back.model.worker.ParkingSpot;
+import smartParkSwarm.backend.SmartParkSwarm_Back.service.WorkerService;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -24,8 +28,12 @@ public class StoreController {
     private final SseController sseController;
 
     @Autowired
-    public StoreController(SseController sseController){
+    private final WorkerService workerService;
+
+    @Autowired
+    public StoreController(SseController sseController, WorkerService workerService){
         this.sseController = sseController;
+        this.workerService = workerService;
     }
 
     @GetMapping("/stores")
@@ -58,12 +66,12 @@ public class StoreController {
         return ResponseEntity.ok(store);
     }
 
-    @PostConstruct
-    private void startSendingMockData() {
-        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
-            sseController.broadcast(generateRandomStatuses());
-        }, 0, 5, TimeUnit.SECONDS);
-    }
+//    @PostConstruct
+//    private void startSendingMockData() {
+//        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
+//            sseController.broadcast(generateRandomStatuses());
+//        }, 0, 5, TimeUnit.SECONDS);
+//    }
 
     /**
      *
