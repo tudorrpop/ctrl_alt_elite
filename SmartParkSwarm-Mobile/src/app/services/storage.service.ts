@@ -8,14 +8,14 @@ export class StorageService {
   private _storage: Storage | null = null;
 
   constructor(private storage: Storage) {
-    this.init();
+    this.init().then();
   }
 
   async init() {
     this._storage = await this.storage.create();
   }
 
-  public async set(key: string, value: any): Promise<void> {
+  public async set<T>(key: string, value: T): Promise<void> {
     await this._storage?.set(key, value);
   }
 

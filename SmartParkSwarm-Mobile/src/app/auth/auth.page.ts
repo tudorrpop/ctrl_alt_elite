@@ -4,12 +4,9 @@ import { FormsModule } from '@angular/forms';
 import {
   IonButton,
   IonContent,
-  IonHeader, IonInput,
+  IonInput,
   IonItem,
-  IonLabel,
-  IonSelect, IonSelectOption,
-  IonTitle,
-  IonToolbar
+  IonLabel
 } from '@ionic/angular/standalone';
 import {AuthService} from "../services/auth.service";
 import {IAuthRequest} from "../models/i-auth-request.model";
@@ -20,7 +17,7 @@ import {Router} from "@angular/router";
   templateUrl: './auth.page.html',
   styleUrls: ['./auth.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonButton, IonItem, IonLabel, IonSelect, IonSelectOption, IonInput]
+  imports: [IonContent, CommonModule, FormsModule, IonButton, IonItem, IonLabel, IonInput]
 })
 export class AuthPage {
   isLogin = true;

@@ -1,13 +1,17 @@
 package smartParkSwarm.backend.SmartParkSwarm_Back.model.entity;
 
 import jakarta.persistence.MappedSuperclass;
+import lombok.Getter;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.enums.Role;
 
 @MappedSuperclass
 public abstract class User {
 
+    @Getter
     private String username;
+    @Getter
     private String password;
+    @Getter
     private Role role;
 
     public User(String username, String password, Role role) {
@@ -17,18 +21,6 @@ public abstract class User {
     }
 
     public User(){}
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public Role getRole() {
-        return role;
-    }
 
     public abstract Long getId();
 }
