@@ -24,43 +24,6 @@ export class StoreComponent implements OnInit{
   store: StoreModel = {} as StoreModel;
   eventSource!: EventSource;
 
-  parkingStatuses: ParkingSpotStatus[] = [
-    { id: "restricted_1", occupied: true },
-    { id: "restricted_2", occupied: false },
-
-    { id: "electric_1", occupied: false },
-    { id: "electric_2", occupied: false },
-    { id: "electric_3", occupied: true },
-    { id: "electric_4", occupied: false },
-    { id: "electric_5", occupied: false },
-    { id: "electric_6", occupied: true },
-    { id: "electric_7", occupied: true },
-
-    { id: "top_1", occupied: false },
-    { id: "top_2", occupied: true },
-    { id: "top_3", occupied: false },
-    { id: "top_4", occupied: true },
-    { id: "top_5", occupied: false },
-    { id: "top_6", occupied: false },
-    { id: "top_7", occupied: true },
-
-    { id: "coffee_1", occupied: false },
-    { id: "coffee_2", occupied: false },
-    { id: "coffee_3", occupied: true },
-
-    { id: "bottom_1", occupied: true },
-    { id: "bottom_2", occupied: true },
-    { id: "bottom_3", occupied: false },
-    { id: "bottom_4", occupied: false },
-    { id: "bottom_5", occupied: true },
-    { id: "bottom_6", occupied: false },
-    { id: "bottom_7", occupied: true },
-    { id: "bottom_8", occupied: true },
-    { id: "bottom_9", occupied: false },
-    { id: "bottom_10", occupied: false },
-  ];
-  
-
   constructor(
     private storeService: StoreService,
     private route: ActivatedRoute,
@@ -76,7 +39,11 @@ export class StoreComponent implements OnInit{
       this.storeService.fetchStore(+storeId).subscribe({
         next: (storeModel) => {
           this.store = storeModel;
-          this.updateParkingSpotColors(this.parkingStatuses);
+          this.storeService.initialParkingLotStatus().subscribe({
+            next: (statuses) => {
+              this.updateParkingSpotColors(statuses);
+            }
+          });
         },
 
         error: () => {
@@ -91,7 +58,7 @@ export class StoreComponent implements OnInit{
       }
     });
 
-    // Just for TESTING
+    // ParkinLot UPDATES
     this.eventSource = new EventSource('http://localhost:8083/sse');
     this.eventSource.addEventListener('message', (event: MessageEvent) => {
       this.updateParkingSpotColors(JSON.parse(event.data));
