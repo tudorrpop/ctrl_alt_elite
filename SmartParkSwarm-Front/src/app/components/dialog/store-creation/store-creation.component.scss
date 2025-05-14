@@ -79,8 +79,8 @@ input {
 }
 
 .layout-image {
-    width: 100px;
-    height: 100px;
+    width: 140px;
+    height: 110px;
     border-radius: 8px;
-    object-fit: cover;
+    object-fit: contain;
 }

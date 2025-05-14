@@ -2,9 +2,15 @@ package smartParkSwarm.backend.SmartParkSwarm_Back.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import smartParkSwarm.backend.SmartParkSwarm_Back.model.entity.Admin;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.entity.Customer;
+import smartParkSwarm.backend.SmartParkSwarm_Back.model.response.AdminModel;
+import smartParkSwarm.backend.SmartParkSwarm_Back.model.response.CustomerModel;
 import smartParkSwarm.backend.SmartParkSwarm_Back.repository.AdminRepository;
 import smartParkSwarm.backend.SmartParkSwarm_Back.repository.CustomerRepository;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -21,6 +27,43 @@ public class UserService {
             AdminRepository adminRepository) {
         this.customerRepository = customerRepository;
         this.adminRepository = adminRepository;
+    }
+
+    public CustomerModel fetchCustomer(Long id) {
+        Customer customer = customerRepository.findCustomerById(id);
+        return new CustomerModel(
+                customer.getId(),
+                customer.getUsername(),
+                customer.getFirstName(),
+                customer.getLastName(),
+                customer.getEmail(),
+                customer.getPhoneNumber(),
+                customer.getMembership(),
+                customer.isActive(),
+                customer.getUuid());
+    }
+
+    public AdminModel fetchAdmin(Long id) {
+        Admin admin = adminRepository.findAdminById(id);
+        return new AdminModel(
+                admin.getId(),
+                admin.getUsername());
+    }
+
+    public List<CustomerModel> fetchCustomers() {
+        List<Customer> customers = customerRepository.findAll();
+        return customers.stream().map(customer ->
+                        new CustomerModel(
+                                customer.getId(),
+                                customer.getUsername(),
+                                customer.getFirstName(),
+                                customer.getLastName(),
+                                customer.getEmail(),
+                                customer.getPhoneNumber(),
+                                customer.getMembership(),
+                                customer.isActive(),
+                                customer.getUuid()))
+                .collect(Collectors.toList());
     }
 
     public boolean markParked(String uuid) {

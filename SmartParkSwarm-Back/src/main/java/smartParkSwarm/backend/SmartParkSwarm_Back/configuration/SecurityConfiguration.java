@@ -31,7 +31,7 @@ public class SecurityConfiguration {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/register", "/login", "/sse", "/worker/*", "/stores/**").permitAll()
+                        .requestMatchers("/register", "/login", "/sse", "/worker/*", "/stores/*", "customer/*", "admin/*").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exception -> exception
@@ -53,7 +53,7 @@ public class SecurityConfiguration {
         return (HttpServletRequest request, HttpServletResponse response,
                 org.springframework.security.core.AuthenticationException authException) -> {
             String origin = request.getHeader("Origin");
-            if ("http://localhost:4200".equals(origin) || "http://localhost:8100".equals(origin)) {
+            if ("http://localhost:4200" .equals(origin) || "http://localhost:8100" .equals(origin)) {
                 response.setHeader("Access-Control-Allow-Origin", origin);
             }
             response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
