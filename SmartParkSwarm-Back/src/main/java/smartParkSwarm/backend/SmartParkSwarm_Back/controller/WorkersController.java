@@ -53,5 +53,15 @@ public class WorkersController {
         return ResponseEntity.ok(test);
     }
 
+    @PostMapping("/worker/initialize")
+    public ResponseEntity<String> initializeWorker(@RequestParam String nameWorker,
+                                                    @RequestParam String location,
+                                                    @RequestParam Integer capacity,
+                                                    @RequestParam String svgpath) {
+        workerService.setupWorker("127.0.0.1:8000", nameWorker, location, capacity);
+        return ResponseEntity.ok("It worked");
+        //svgpath to add in database
+    }
+
 
 }
