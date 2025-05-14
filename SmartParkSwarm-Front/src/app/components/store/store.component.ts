@@ -82,4 +82,12 @@ export class StoreComponent implements OnInit{
   public goBack(): void{
     this.router.navigate(['/dashboard']);
   }
+
+  public removeStore(): void {
+    this.storeService.deleteStore(this.store.storeId).subscribe({
+      next: () => {
+        this.router.navigate(['/dashboard']);
+      }
+    });
+  }
 }

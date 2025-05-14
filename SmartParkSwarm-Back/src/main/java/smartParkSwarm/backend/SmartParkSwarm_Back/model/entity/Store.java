@@ -16,12 +16,12 @@ public class Store {
 
     private String storeAddress;
 
-    private ParkingLayout parkingLayout;
+    private String parkingLayout;
 
     public Store() {
     }
 
-    public Store(String storeName, String storeAddress, ParkingLayout parkingLayout) {
+    public Store(String storeName, String storeAddress, String parkingLayout) {
         this.storeName = storeName;
         this.storeAddress = storeAddress;
         this.parkingLayout = parkingLayout;
@@ -47,11 +47,11 @@ public class Store {
         this.storeAddress = storeAddress;
     }
 
-    public ParkingLayout getParkingLayout() {
+    public String getParkingLayout() {
         return parkingLayout;
     }
 
-    public void setParkingLayout(ParkingLayout parkingLayout) {
+    public void setParkingLayout(String parkingLayout) {
         this.parkingLayout = parkingLayout;
     }
 

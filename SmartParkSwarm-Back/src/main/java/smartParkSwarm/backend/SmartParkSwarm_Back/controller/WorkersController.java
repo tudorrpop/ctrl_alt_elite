@@ -1,7 +1,6 @@
 package smartParkSwarm.backend.SmartParkSwarm_Back.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.response.ParkingSpotStatus;
@@ -10,7 +9,6 @@ import smartParkSwarm.backend.SmartParkSwarm_Back.service.UserService;
 import smartParkSwarm.backend.SmartParkSwarm_Back.service.WorkerService;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 public class WorkersController {
