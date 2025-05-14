@@ -9,17 +9,13 @@ import { StorageService } from "./storage.service";
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://192.168.1.128:8083';
+  private apiUrl: string = 'http://localhost:8083';
 
   constructor(private http: HttpClient, private storageService: StorageService) {}
 
-  //Updated to return a Promise<boolean>
-  // async isLoggedIn(): Promise<boolean> {
-  //   const token = await this.storageService.get<string>('token');
-  //   return !!token;
-  // }
-  isLoggedIn(): boolean {
-    return !!this.storageService.get<string>('token');
+  async isLoggedIn(): Promise<boolean> {
+    const token: string | null = await this.storageService.get<string>('token');
+    return !!token;
   }
 
   login(data: IAuthRequest): Observable<IUser> {

@@ -31,7 +31,7 @@
             <ion-card-title>Scan QR Code</ion-card-title>
           </ion-card-header>
           <ion-card-content class="qr-center">
-            <img ngSrc="assets/qr-placeholder.png" alt="QR Code" height="351" width="330">
+            <qrcode [qrdata]="qrData" [errorCorrectionLevel]="'M'"></qrcode>
           </ion-card-content>
         </ion-card>
       </div>

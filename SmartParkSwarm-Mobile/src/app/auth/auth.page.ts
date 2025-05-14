@@ -20,7 +20,7 @@ import {Router} from "@angular/router";
   imports: [IonContent, CommonModule, FormsModule, IonButton, IonItem, IonLabel, IonInput]
 })
 export class AuthPage {
-  isLogin = true;
+  isLogin: boolean = true;
   authData: IAuthRequest = {
     username: '',
     password: '',
@@ -29,7 +29,7 @@ export class AuthPage {
 
   constructor(private authService: AuthService, private router: Router) {}
 
-  submit() {
+  submit(): void {
     if (this.isLogin) {
       this.authService.login(this.authData).subscribe({
         next: (res) => {
@@ -45,7 +45,6 @@ export class AuthPage {
       this.authService.register(this.authData).subscribe({
         next: (res) => {
           console.log('Registered:', res);
-          // Save token to storage
         },
         error: (err) => {
           console.error('Registration failed', err);
