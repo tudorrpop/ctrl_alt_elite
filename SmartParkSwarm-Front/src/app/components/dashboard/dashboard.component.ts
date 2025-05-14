@@ -10,6 +10,8 @@ import { StoreCreationComponent } from '../dialog/store-creation/store-creation.
 import { DialogService } from 'primeng/dynamicdialog';
 import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
+import { CustomerModel } from '../../data/model/customer.model';
+import { UserService } from '../../services/user/user.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -29,10 +31,12 @@ import { Router } from '@angular/router';
 export class DashboardComponent implements OnInit{
 
   stores!: StoreOverviewModel[];
+  customers!: CustomerModel[];
 
   constructor(
     private router: Router,
     private storeService: StoreService,
+    private userService: UserService,
     private dialogService: DialogService,
     private messageService: MessageService
   ){}
@@ -41,6 +45,14 @@ export class DashboardComponent implements OnInit{
     this.storeService.fetchStores().subscribe({
       next: (response) => {
         this.stores = response;
+        console.log(response);
+        
+      }
+    });
+
+    this.userService.fetchUsers().subscribe({
+      next: (response) => {
+        this.customers = response;
         console.log(response);
         
       }

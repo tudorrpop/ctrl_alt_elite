@@ -32,9 +32,9 @@ export class StoreCreationComponent {
   layoutSelectionDialog: boolean = false;
 
   layouts = [
-    { name: "GridFlow", image: "/parking_layout/parking_layout_1.png" },
-    { name: "SwiftPark", image: "/parking_layout/parking_layout_1.png" },
-    { name: "EZLoop", image: "/parking_layout/parking_layout_1.png" }
+    { name: "Grid", image: "/parking_layout/GRID.png" },
+    { name: "Stripe", image: "/parking_layout/STRIPE.png" },
+    { name: "Greenway", image: "/parking_layout/GREENWAY.png" }
   ];
 
   constructor(

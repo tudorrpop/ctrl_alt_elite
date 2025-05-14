@@ -1,7 +1,5 @@
 package smartParkSwarm.backend.SmartParkSwarm_Back.model.request;
 
-import lombok.Getter;
-
 public class StoreRequest {
     private String storeName;
     private String storeAddress;

@@ -27,7 +27,7 @@
 
 
 <!-- Layout Selection Dialog -->
-<p-dialog [(visible)]="layoutSelectionDialog" [closable]="true" modal="true" header="Select Parking Layout" [style]="{width: '400px'}" (onHide)="layoutSelectionDialog = false">
+<p-dialog [(visible)]="layoutSelectionDialog" [closable]="true" modal="true" header="Select Parking Layout" [style]="{width: '500px'}" (onHide)="layoutSelectionDialog = false">
     <div class="layout-options">
         <div *ngFor="let layout of layouts" class="layout-item" (click)="selectLayout(layout.name)">
             <img [src]="layout.image" [alt]="layout.name" class="layout-image">

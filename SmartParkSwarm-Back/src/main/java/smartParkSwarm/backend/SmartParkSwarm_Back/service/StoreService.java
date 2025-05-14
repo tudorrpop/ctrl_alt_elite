@@ -43,7 +43,7 @@ public class StoreService {
         Store store = new Store(
                 storeRequest.getStoreName(),
                 storeRequest.getStoreAddress(),
-                ParkingLayout.valueOf(storeRequest.getParkingLayout().toUpperCase())
+                storeRequest.getParkingLayout()
         );
         storeRepository.save(store);
         Optional<Store> returnedStored = storeRepository.findByStoreName(store.getStoreName());
@@ -107,7 +107,7 @@ public class StoreService {
         }
         foundStore.get().setStoreName(storeRequest.getStoreName());
         foundStore.get().setStoreAddress(storeRequest.getStoreAddress());
-        foundStore.get().setParkingLayout(ParkingLayout.valueOf(storeRequest.getParkingLayout().toUpperCase()));
+        foundStore.get().setParkingLayout(storeRequest.getParkingLayout());
         storeRepository.save(foundStore.get());
 
         return new StoreOverviewModel(

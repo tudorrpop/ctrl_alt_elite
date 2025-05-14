@@ -52,6 +52,15 @@ export class StoreService {
     );
   }
 
+  public deleteStore(storeId: number): Observable<HttpResponse<any>> {
+    const headers = this.getAuthHeaders();
+    
+    return this.httpClient.delete<HttpResponse<any>>(
+      `${this.baseUrl}/stores/${storeId}`, 
+      { headers, withCredentials: true, observe: 'response' }
+    );
+  }
+
   public initialParkingLotStatus(): Observable<ParkingSpotStatus[]> {
     const headers = this.getAuthHeaders();    
     
