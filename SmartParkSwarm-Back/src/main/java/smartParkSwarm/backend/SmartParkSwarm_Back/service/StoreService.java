@@ -28,9 +28,12 @@ public class StoreService {
         if(storeRequest.getStoreName() == null
                 || storeRequest.getStoreAddress() == null
                 || storeRequest.getParkingLayout() == null
+                || storeRequest.getCapacity() == null
+                || storeRequest.getIpAddress() == null
                 || storeRequest.getStoreName().isBlank()
                 || storeRequest.getStoreAddress().isBlank()
                 || storeRequest.getParkingLayout().isBlank()
+                || storeRequest.getIpAddress().isBlank()
         ) {
             throw new IllegalArgumentException("Invalid fields: null or empty");
         }
@@ -43,7 +46,9 @@ public class StoreService {
         Store store = new Store(
                 storeRequest.getStoreName(),
                 storeRequest.getStoreAddress(),
-                storeRequest.getParkingLayout()
+                storeRequest.getParkingLayout(),
+                storeRequest.getCapacity(),
+                storeRequest.getIpAddress()
         );
         storeRepository.save(store);
         Optional<Store> returnedStored = storeRepository.findByStoreName(store.getStoreName());
@@ -74,7 +79,7 @@ public class StoreService {
                 store.getId(),
                 store.getStoreName(),
                 store.getStoreAddress(),
-                store.getParkingLayout().toString()
+                store.getParkingLayout()
         )).orElseThrow(() -> new EntityNotFoundException("A store with this name does not exist"));
     }
 

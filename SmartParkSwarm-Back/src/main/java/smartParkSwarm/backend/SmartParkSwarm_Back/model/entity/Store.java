@@ -18,13 +18,19 @@ public class Store {
 
     private String parkingLayout;
 
+    private Integer capacity;
+
+    private String ipAddress;
+
     public Store() {
     }
 
-    public Store(String storeName, String storeAddress, String parkingLayout) {
+    public Store(String storeName, String storeAddress, String parkingLayout,Integer capacity, String ipAddress) {
         this.storeName = storeName;
         this.storeAddress = storeAddress;
         this.parkingLayout = parkingLayout;
+        this.capacity = capacity;
+        this.ipAddress = ipAddress;
     }
 
     public Long getId() {
@@ -57,5 +63,21 @@ public class Store {
 
     public void setStoreName(String storeName) {
         this.storeName = storeName;
+    }
+
+    public String getIpAddress() {
+        return ipAddress;
+    }
+
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
+    }
+
+    public Integer getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(Integer capacity) {
+        this.capacity = capacity;
     }
 }
