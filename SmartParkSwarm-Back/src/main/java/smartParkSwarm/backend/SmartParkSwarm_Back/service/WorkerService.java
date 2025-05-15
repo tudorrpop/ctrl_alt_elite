@@ -1,35 +1,45 @@
 package smartParkSwarm.backend.SmartParkSwarm_Back.service;
 
+import jakarta.persistence.EntityExistsException;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+import smartParkSwarm.backend.SmartParkSwarm_Back.model.entity.Store;
+import smartParkSwarm.backend.SmartParkSwarm_Back.model.request.StoreRequest;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.worker.ParkingLot;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.worker.ParkingSpot;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.worker.VehicleEntry;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class WorkerService {
 
     private WebClient webClient;
 
-    public WorkerService(WebClient.Builder webClientBuilder) {
+    private StoreService storeService;
+
+    public WorkerService(WebClient.Builder webClientBuilder, StoreService storeService) {
         this.webClient = webClientBuilder.build();
+        this.storeService = storeService;
     }
 
-    public ParkingLot setupWorker(String ipaddress, String name, String location, Integer capacity) {
-        Map<String, Object> requestBody = Map.of(
-                "name", name,
-                "location", location,
-                "capacity", capacity
-        );
+    public ParkingLot setupWorker(StoreRequest storeRequest) {
 
-        return createData(ipaddress, "/api/setup", requestBody, ParkingLot.class).block();
+
+        storeService.saveStore(storeRequest);
+
+        Map<String, Object> requestBody = Map.of(
+                "name", storeRequest.getStoreName(),
+                "location", storeRequest.getStoreAddress(),
+                "capacity", storeRequest.getCapacity()
+        );
+        return createData(storeRequest.getIpAddress(), "/api/setup", requestBody, ParkingLot.class).block();
     }
 
     public ParkingLot fetchWorkerInformation(String ipaddress) {

@@ -3,7 +3,9 @@ package smartParkSwarm.backend.SmartParkSwarm_Back.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import smartParkSwarm.backend.SmartParkSwarm_Back.model.request.StoreRequest;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.response.ParkingSpotStatus;
+import smartParkSwarm.backend.SmartParkSwarm_Back.model.worker.ParkingLot;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.worker.ParkingSpot;
 import smartParkSwarm.backend.SmartParkSwarm_Back.service.UserService;
 import smartParkSwarm.backend.SmartParkSwarm_Back.service.WorkerService;
@@ -54,14 +56,11 @@ public class WorkersController {
     }
 
     @PostMapping("/worker/initialize")
-    public ResponseEntity<String> initializeWorker(@RequestParam String nameWorker,
-                                                    @RequestParam String location,
-                                                    @RequestParam Integer capacity,
-                                                    @RequestParam String svgpath) {
-        workerService.setupWorker("127.0.0.1:8000", nameWorker, location, capacity);
-        return ResponseEntity.ok("It worked");
-        //svgpath to add in database
+    public ResponseEntity< ParkingLot> initializeWorker(@RequestBody StoreRequest storeRequest) {
+        ParkingLot parkingLot = workerService.setupWorker(storeRequest);
+        return ResponseEntity.ok(parkingLot);
     }
+
 
 
 }
