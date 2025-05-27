@@ -34,6 +34,8 @@ public class StoreController {
         return ResponseEntity.ok(stores);
     }
 
+    // Method for testing the creation of multiple stores (WITHOUT WORKER INITIALIZATION).
+    // The worker initialization functionality is in WorkersController -> WorkerService
     @PostMapping("/stores")
     public ResponseEntity<StoreOverviewModel> createStore(@RequestBody StoreRequest storeRequest) {
         StoreOverviewModel storeOverviewModel = storeService.saveStore(storeRequest);
