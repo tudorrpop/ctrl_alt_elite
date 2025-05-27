@@ -22,11 +22,19 @@ export class UserService {
   }
 
   public fetchUsers(): Observable<CustomerModel[]> {
-      const headers = this.getAuthHeaders();    
-      
+      const headers = this.getAuthHeaders();
+
       return this.httpClient.get<CustomerModel[]>(
-        `${this.baseUrl}/customer/users`, 
+        `${this.baseUrl}/customer/users`,
         { headers, withCredentials: true }
       );
-    }
+  }
+
+  public getCurrentUser(userId: number): Observable<CustomerModel> {
+    const headers = this.getAuthHeaders();
+    return this.httpClient.get<CustomerModel>(
+      `${this.baseUrl}/customer/user/${userId}`,
+      { headers, withCredentials: true }
+    );
+  }
 }

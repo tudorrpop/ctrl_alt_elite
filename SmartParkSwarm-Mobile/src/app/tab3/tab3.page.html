@@ -7,7 +7,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="ion-padding">
+<ion-content *ngIf="currentUser" [fullscreen]="true" class="ion-padding">
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">Manage Account</ion-title>
@@ -16,40 +16,35 @@
 
   <ion-item>
     <ion-label position="stacked">Username</ion-label>
-    <ion-input [value]="accountData.username" disabled></ion-input>
+    <ion-input [value]="currentUser.username" disabled></ion-input>
   </ion-item>
 
   <ion-item>
     <ion-label position="stacked">Membership</ion-label>
-    <ion-input value="Gold" disabled></ion-input>
+    <ion-input [value]="currentUser.membership" disabled></ion-input>
   </ion-item>
 
   <ion-item>
     <ion-label position="stacked">First Name</ion-label>
-    <ion-input [(ngModel)]="accountData.firstName"></ion-input>
+    <ion-input [(ngModel)]="currentUser.firstName" (ionInput)="onInputChange()"></ion-input>
   </ion-item>
 
   <ion-item>
     <ion-label position="stacked">Last Name</ion-label>
-    <ion-input [(ngModel)]="accountData.lastName"></ion-input>
+    <ion-input [(ngModel)]="currentUser.lastName" (ionInput)="onInputChange()"></ion-input>
   </ion-item>
 
   <ion-item>
     <ion-label position="stacked">Email</ion-label>
-    <ion-input type="email" [(ngModel)]="accountData.email"></ion-input>
+    <ion-input type="email" [(ngModel)]="currentUser.email" (ionInput)="onInputChange()"></ion-input>
   </ion-item>
 
   <ion-item>
     <ion-label position="stacked">Phone Number</ion-label>
-    <ion-input type="tel" [(ngModel)]="accountData.phoneNumber"></ion-input>
+    <ion-input type="tel" [(ngModel)]="currentUser.phoneNumber" (ionInput)="onInputChange()"></ion-input>
   </ion-item>
 
-  <ion-item>
-    <ion-label position="stacked">Password</ion-label>
-    <ion-input type="password" [(ngModel)]="accountData.password"></ion-input>
-  </ion-item>
-
-  <ion-button expand="block" (click)="updateAccount()" class="ion-margin-top">
+  <ion-button expand="block" class="ion-margin-top" (click)="saveChanges()" *ngIf="isModified">
     Save Changes
   </ion-button>
 </ion-content>

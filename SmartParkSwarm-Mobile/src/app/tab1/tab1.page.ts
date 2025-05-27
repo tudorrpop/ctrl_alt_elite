@@ -18,45 +18,42 @@ import {QRCodeComponent} from "angularx-qrcode";
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
   styleUrls: ['tab1.page.scss'],
-  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardHeader, IonCard, IonCardTitle, IonCardContent, IonIcon, NgOptimizedImage, ExploreContainerComponent, IonButtons, QRCodeComponent],
+  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardHeader, IonCard, IonCardTitle, IonCardContent, IonIcon, ExploreContainerComponent, IonButtons, QRCodeComponent],
 })
 export class Tab1Page implements OnInit {
-  currentUser: any;
   currentUserName: any;
-  isFlipped = false;
-  qrData = 'https://your-customer-link-or-info.com';
+  currentMembership: any;
+  isFlipped: boolean = false;
+  qrData: any;
 
   constructor(private userService: UserService, private storageService: StorageService) {}
 
-  async ngOnInit() {
-    //await this.setCurrentUser();
-    await this.setUserName();
+  ngOnInit() {
+    this.setUserName();
+    this.setUserUUID();
+    this.setCurrentMembership(this.storageService.get('userId'));
   }
 
   flipCard() {
     this.isFlipped = !this.isFlipped;
   }
 
-  // async setCurrentUser() {
-  //   this.userService.getCurrentUser().subscribe((user) => {
-  //     this.currentUser = user;
-  //     console.log(this.currentUser);
-  //   });
-  // }
-
-  async setUserName() {
-    this.currentUserName = await this.storageService.get('username');
-    console.log(this.currentUserName);
+  setUserName() {
+    this.currentUserName = this.storageService.get('username');
   }
 
-  fetchUserUUID() {
-    this.userService.getUserUUID().subscribe({
-      next: (uuid: string) => {
-        console.log('Fetched UUID:', uuid);
-        this.qrData = uuid;
+  setUserUUID() {
+    this.qrData = this.storageService.get('uuid');
+    console.log(this.qrData);
+  }
+
+  setCurrentMembership(userId: any) {
+    this.userService.getCurrentUser(userId).subscribe({
+      next: (user: any) => {
+        this.currentMembership = user.membership;
       },
-      error: (err) => {
-        console.error('Failed to fetch UUID', err);
+      error: (error: any) => {
+        console.error('Error fetching current user:', error);
       }
     });
   }

@@ -12,59 +12,54 @@ import {
 } from '@ionic/angular/standalone';
 import { ExploreContainerComponent } from '../explore-container/explore-container.component';
 import {StorageService} from "../services/storage.service";
-import {HttpClient} from "@angular/common/http";
 import {FormsModule} from "@angular/forms";
+import {UserService} from "../services/user.service";
+import {NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
   styleUrls: ['tab3.page.scss'],
-  imports: [IonButton, IonHeader, IonToolbar, IonTitle, IonContent, ExploreContainerComponent, IonButtons, IonItem, IonLabel, IonInput, FormsModule],
+  imports: [IonButton, IonHeader, IonToolbar, IonTitle, IonContent, ExploreContainerComponent, IonButtons, IonItem, IonLabel, IonInput, FormsModule, NgIf],
 })
 export class Tab3Page implements OnInit {
-  accountData = {
-    username: '',
-    firstName: '',
-    lastName: '',
-    email: '',
-    phoneNumber: '',
-    password: ''
-  };
+  currentUser: any;
+  originalUser: any;
+  isModified: boolean = false;
 
-  constructor(private storageService: StorageService, private http: HttpClient) {}
+  constructor(private storageService: StorageService, private userService: UserService) {}
 
-  async ngOnInit() {
-    const username = await this.storageService.get<string>('username');
-    const userId = await this.storageService.get<string>('userId');
-    this.accountData.username = username || '';
+  ngOnInit() {
+    this.setCurrentUser(this.storageService.get('userId'));
+  }
 
-    // Fetch existing user details (fake api call example)
-    this.http.get<any>(`http://localhost:8083/users/${userId}`).subscribe({
-      next: (user) => {
-        this.accountData.firstName = user.firstName;
-        this.accountData.lastName = user.lastName;
-        this.accountData.email = user.email;
-        this.accountData.phoneNumber = user.phoneNumber;
+  setCurrentUser(userId: any) {
+    this.userService.getCurrentUser(userId).subscribe({
+      next: (user: any) => {
+        this.currentUser = user;
+        this.originalUser = user;
       },
-      error: (err) => {
-        console.error('Failed to load user details', err);
+      error: (error: any) => {
+        console.error('Error fetching current user:', error);
       }
     });
   }
 
-  updateAccount() {
-    const userId = this.storageService.get<string>('userId');
+  onInputChange() {
+    if(!this.isModified) {
+      this.isModified = true;
+    }
+  }
 
-    Promise.resolve(userId).then(id => {
-      if (id) {
-        this.http.put(`http://localhost:8083/users/${id}`, this.accountData).subscribe({
-          next: () => {
-            console.log('Account updated successfully');
-          },
-          error: (err) => {
-            console.error('Failed to update account', err);
-          }
-        });
+  saveChanges() {
+    this.userService.updateUser(this.currentUser.userId, this.currentUser).subscribe({
+      next: (updatedUser: any) => {
+        this.originalUser = { ...updatedUser };
+        this.currentUser = { ...updatedUser };
+        this.isModified = false;
+      },
+      error: (error: any) => {
+        console.error('Error updating user:', error);
       }
     });
   }

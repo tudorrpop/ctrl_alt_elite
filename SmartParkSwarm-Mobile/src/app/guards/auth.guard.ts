@@ -1,13 +1,12 @@
-import {CanActivateFn, CanMatchFn, Router} from '@angular/router';
-import {AuthService} from "../services/auth.service";
-import {inject} from "@angular/core";
-import {from, map} from "rxjs";
+import { CanActivateFn, CanMatchFn, Router } from '@angular/router';
+import { inject } from '@angular/core';
+import { AuthService } from '../services/auth.service';
 
 export const authGuard: CanActivateFn & CanMatchFn = (route, stateOrSegments) => {
-  const authService: AuthService = inject(AuthService);
-  const router: Router = inject(Router);
+  const authService = inject(AuthService);
+  const router = inject(Router);
 
-  let currentUrl: string = '';
+  let currentUrl = '';
 
   if (Array.isArray(stateOrSegments)) {
     currentUrl = '/' + stateOrSegments.map(s => s.path).join('/');
@@ -15,16 +14,12 @@ export const authGuard: CanActivateFn & CanMatchFn = (route, stateOrSegments) =>
     currentUrl = stateOrSegments.url;
   }
 
-  return from(authService.isLoggedIn()).pipe(
-    map(isLoggedIn => {
-      if (isLoggedIn) {
-        return true;
-      } else {
-        if (currentUrl !== '/auth') {
-          router.navigateByUrl('/auth');
-        }
-        return false;
-      }
-    })
-  );
+  if (authService.isLoggedIn()) {
+    return true;
+  } else {
+    if (currentUrl !== '/auth') {
+      router.navigateByUrl('/auth');
+    }
+    return false;
+  }
 };

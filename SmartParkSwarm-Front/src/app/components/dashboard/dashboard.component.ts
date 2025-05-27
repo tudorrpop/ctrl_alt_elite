@@ -17,8 +17,8 @@ import { UserService } from '../../services/user/user.service';
   selector: 'app-dashboard',
   imports: [
     NavbarComponent,
-    CardModule, 
-    CommonModule, 
+    CardModule,
+    CommonModule,
     TabsModule,
     ButtonModule
   ],
@@ -46,7 +46,7 @@ export class DashboardComponent implements OnInit{
       next: (response) => {
         this.stores = response;
         console.log(response);
-        
+
       }
     });
 
@@ -54,9 +54,11 @@ export class DashboardComponent implements OnInit{
       next: (response) => {
         this.customers = response;
         console.log(response);
-        
+
       }
     });
+
+    this.getCurrentUser();
   }
 
   public navigateToStore(storeId: number): void {
@@ -93,6 +95,17 @@ export class DashboardComponent implements OnInit{
           summary: 'Store Info!',
           detail: 'Store creation process canceled.',
         });
+      }
+    });
+  }
+
+  getCurrentUser() {
+    this.userService.getCurrentUser(3).subscribe({
+      next: (user: any) => {
+        console.log('Current User:', user);
+      },
+      error: (error: any) => {
+        console.error('Error fetching current user:', error);
       }
     });
   }
