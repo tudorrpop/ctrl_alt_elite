@@ -46,7 +46,7 @@ setup_parkinglot() {
     location=$3
     capacity=$4
 
-    response=$(curl -s -w "%{http_code}" --location "http://$ip:8000/api/setup/" \
+    response=$(curl -s -w "%{http_code}" --location "http://$ip:8000/api/setup" \
     --header 'Content-Type: application/json' \
     --data "{
         \"name\": \"$name\",
@@ -65,7 +65,7 @@ setup_parkinglot() {
 get_parkingspots() {
     ip=$1
 
-    curl -s --location "http://$ip:8000/api/ParkingSpot/" | \
+    curl -s --location "http://$ip:8000/api/ParkingSpot" | \
     jq -r '[.[] | [.uuid, .spot_number, .is_occupied]] | (["ID","Number","Occupied"], (.[])) | @tsv' | \
     column -t
 }
@@ -77,7 +77,7 @@ vehicle_enter() {
     qr_code=$3
     spot_uuid=$4
 
-    response=$(curl -s -w "%{http_code}" --location "http://$ip:8000/api/VehicleEntry/" \
+    response=$(curl -s -w "%{http_code}" --location "http://$ip:8000/api/VehicleEntry" \
     --header 'Content-Type: application/json' \
     --data "{
         \"license_plate\": \"$license_plate\",
@@ -99,7 +99,7 @@ vehicle_exit() {
     ip=$1
     qr_code=$2
 
-    response=$(curl -s -w "%{http_code}" --location --request PUT "http://$ip:8000/api/VehicleEntry/exit/$qr_code/" -o /dev/null)
+    response=$(curl -s -w "%{http_code}" --location --request PUT "http://$ip:8000/api/VehicleEntry/exit/$qr_code" -o /dev/null)
 
     if [ $response -eq 200 ]; then
         echo "User with QR $qr_code exited the parking lot."

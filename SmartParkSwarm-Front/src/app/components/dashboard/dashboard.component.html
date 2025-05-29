@@ -5,7 +5,7 @@
 
         <div class="submenu">
             <h4 style="font-size: 45px; font-weight: bold; margin: 0">
-                Overview
+                Store Overview
             </h4>
             <p-button label="New Store" variant="outlined" icon="pi pi-shop" iconPos="right" severity="success" (click)="createStore()"/>
         </div>
@@ -16,7 +16,7 @@
                 <p-tablist>
                     <p-tab value="0">
                         <i class="pi pi-shop"></i>
-                        <span class="font-bold whitespace-nowrap">Stores</span>
+                        <span class="font-bold whitespace-nowrap">Shops</span>
                     </p-tab>
                     <p-tab value="1">
                         <i class="pi pi-users"></i>
@@ -45,17 +45,37 @@
                             </div>
                     </p-tabpanel>
                     <p-tabpanel value="1">
-                        <p class="m-0">
-                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque
-                            laudantium, totam rem
-                            aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta
-                            sunt explicabo.
-                            Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia
-                            consequuntur magni
-                            dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non
-                            numquam eius
-                            modi.
-                        </p>
+                        <div class="cards">
+                            <div *ngFor="let customer of customers">
+                                <p-card [style]="{
+                                    width: '100%',
+                                    height: '120px',
+                                    position: 'relative',
+                                    cursor: 'pointer'}">  
+                                        <div>
+                                            <div style="font-weight: bold; font-size: 16px;">
+                                            <ng-container *ngIf="customer.firstName || customer.lastName; else noName">
+                                                {{ customer.firstName || 'Unnamed' }} {{ customer.lastName || '' }}
+                                            </ng-container>
+                                            <ng-template #noName>
+                                                <span style="font-style: italic; color: gray;">Full Name not provided yet!</span>
+                                            </ng-template>
+                                            </div>
+                                            <div style="color: gray;">Username: {{ customer.username || 'Not set' }}</div>
+                                            <div style="color: gray;">QR: {{ customer.uuid || 'Not set' }}</div>
+                                            <div>
+                                                Account: 
+                                                <span [ngStyle]="{
+                                                    color: customer.active ? 'green' : 'red',
+                                                    fontStyle: 'italic'
+                                                  }">
+                                                  {{ customer.active ? 'Active' : 'Inactive' }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                </p-card>
+                            </div>
+                        </div>
                     </p-tabpanel>
                     <p-tabpanel value="2">
                         <p class="m-0">

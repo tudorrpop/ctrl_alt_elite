@@ -1,17 +1,41 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Tab 1
+      Your Card
     </ion-title>
+    <ion-buttons slot="end">
+      <app-explore-container></app-explore-container>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 1</ion-title>
-    </ion-toolbar>
-  </ion-header>
 
-  <app-explore-container name="Tab 1 page"></app-explore-container>
+  <div class="card-container" (click)="flipCard()">
+    <div class="card" [class.flipped]="isFlipped">
+      <div class="front">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Customer Card</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p>Name: {{ currentUserName }}</p>
+            <p>Membership: Gold</p>
+            <ion-icon name="card-outline" size="large"></ion-icon>
+          </ion-card-content>
+        </ion-card>
+      </div>
+      <div class="back">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Scan QR Code</ion-card-title>
+          </ion-card-header>
+          <ion-card-content class="qr-center">
+            <img ngSrc="assets/qr-placeholder.png" alt="QR Code" height="351" width="330">
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </div>
+  </div>
+
 </ion-content>

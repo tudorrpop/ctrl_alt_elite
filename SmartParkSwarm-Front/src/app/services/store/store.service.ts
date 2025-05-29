@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { StoreOverviewModel } from '../../data/model/store-overview.model';
 import { StoreRequest } from '../../data/request/store.request';
 import { StoreModel } from '../../data/model/store.model';
+import { ParkingSpotStatus } from '../../data/model/parking-spot-status.model';
 
 @Injectable({
   providedIn: 'root'
@@ -47,6 +48,24 @@ export class StoreService {
     
     return this.httpClient.get<StoreModel>(
       `${this.baseUrl}/stores/${storeId}`, 
+      { headers, withCredentials: true }
+    );
+  }
+
+  public deleteStore(storeId: number): Observable<HttpResponse<any>> {
+    const headers = this.getAuthHeaders();
+    
+    return this.httpClient.delete<HttpResponse<any>>(
+      `${this.baseUrl}/stores/${storeId}`, 
+      { headers, withCredentials: true, observe: 'response' }
+    );
+  }
+
+  public initialParkingLotStatus(): Observable<ParkingSpotStatus[]> {
+    const headers = this.getAuthHeaders();    
+    
+    return this.httpClient.put<ParkingSpotStatus[]>(
+      `${this.baseUrl}/worker/update`, 
       { headers, withCredentials: true }
     );
   }

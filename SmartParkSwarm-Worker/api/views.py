@@ -5,6 +5,7 @@ from django import http
 from .models import ParkingLot, ParkingSpot, VehicleEntry
 from .serializers import ParkingLotSerializer, ParkingSpotSerializer, VehicleEntrySerializer
 import os
+from .orchestrator import orchestratorservice
 
 class ParkingLotSetup(generics.CreateAPIView):
     """
@@ -110,13 +111,17 @@ class VehicleEntryList(generics.ListCreateAPIView):
 
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-
-        spot.is_occupied = True
-        spot.save()
-
-        headers = self.get_success_headers(serializer.data)
-        return response.Response(serializer.data, status=201, headers=headers)
+        qr_code = serializer.validated_data.get('qr_code')
+        
+        if orchestratorservice.scan_qr_on_entry(qr_code):
+            self.perform_create(serializer)
+            spot.is_occupied = True
+            spot.save()
+            orchestratorservice.send_update_signal()
+            headers = self.get_success_headers(serializer.data)
+            return response.Response(serializer.data, status=201, headers=headers)
+        else:
+            return response.Response({'error': 'User is already parked in another lot.'}, status=400)     
     
 class VehicleEntryDetail(generics.RetrieveUpdateDestroyAPIView):
     """
@@ -133,8 +138,13 @@ class VehicleExitView(generics.UpdateAPIView):
     queryset = VehicleEntry.objects.all()
     lookup_field = 'qr_code'
 
+    
     def put(self, request, *args, **kwargs):
         qr_code = kwargs.get('qr_code')
+
+        if not orchestratorservice.scan_qr_on_exit(qr_code):
+            return response.Response({'error': 'User is not in this parkinglot.'}, status=400)     
+        
         try:
             entry = VehicleEntry.objects.get(qr_code=qr_code, active=True)
         except VehicleEntry.DoesNotExist:
@@ -147,6 +157,7 @@ class VehicleExitView(generics.UpdateAPIView):
         spot = entry.spot_uuid
         spot.is_occupied = False
         spot.save()
+        orchestratorservice.send_update_signal()
 
         return response.Response({'message': 'Vehicle exit registered successfully.'}, status=200)
     

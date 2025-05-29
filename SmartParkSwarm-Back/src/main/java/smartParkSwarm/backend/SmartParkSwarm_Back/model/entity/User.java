@@ -1,10 +1,12 @@
 package smartParkSwarm.backend.SmartParkSwarm_Back.model.entity;
 
 import jakarta.persistence.MappedSuperclass;
+import lombok.Getter;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.enums.Role;
 
 @MappedSuperclass
 public abstract class User {
+
 
     private String username;
     private String password;
@@ -18,6 +20,8 @@ public abstract class User {
 
     public User(){}
 
+    public abstract Long getId();
+
     public String getUsername() {
         return username;
     }
@@ -30,5 +34,15 @@ public abstract class User {
         return role;
     }
 
-    public abstract Long getId();
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
 }
