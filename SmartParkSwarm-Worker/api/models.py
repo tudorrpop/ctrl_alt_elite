@@ -6,6 +6,7 @@ import uuid
 class ParkingLot(models.Model):
     uuid = models.UUIDField(primary_key=True, unique=True, editable=False, default=uuid.uuid4)
     name = models.CharField(max_length=255)
+    orchestrator_ip = models.CharField(max_length=255)
     location = models.CharField(max_length=255)
     capacity = models.IntegerField(default=50)
     created_at = models.DateTimeField(auto_now=True)

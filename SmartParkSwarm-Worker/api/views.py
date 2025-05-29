@@ -16,8 +16,14 @@ class ParkingLotSetup(generics.CreateAPIView):
     def post(self, request, *args, **kwargs):
         if ParkingLot.objects.exists():
             return response.Response({"message": "ParkingLot already exists!"}, status=400)
+        
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        ip = x_forwarded_for.split(',')[0] if x_forwarded_for else request.META.get('REMOTE_ADDR')
 
-        serializer = self.get_serializer(data=request.data)
+        data = request.data.copy()
+        data['orchestrator_ip'] = ip
+
+        serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         parking_lot = serializer.save()
 
