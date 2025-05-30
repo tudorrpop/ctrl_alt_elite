@@ -1,45 +1,59 @@
-
 <head>
-    <meta charset="UTF-8">
+  <meta charset="UTF-8" />
 </head>
 <div class="app-container">
+  <app-navbar></app-navbar>
 
-    <app-navbar></app-navbar>
+  <div class="content">
+    <div class="submenu">
+      <div class="store-info">
+        <h4 style="font-size: 45px; font-weight: bold; margin: 0">
+          {{ store.storeName }}
+        </h4>
+        <h5 style="padding-top: 10px; margin: 0; opacity: 70%">
+          Address: {{ store.storeAddress }}
+        </h5>
+      </div>
 
-    <div class="content">
+      <div class="buttons">
+        <p-button
+          label="Edit"
+          variant="outlined"
+          icon="pi pi-pen-to-square"
+          iconPos="right"
+          severity="info"
+          (click)="updateStore()"
+        />
+        <p-button
+          label="Remove"
+          variant="outlined"
+          icon="pi pi-trash"
+          iconPos="right"
+          severity="danger"
+          (click)="removeStore()"
+        />
+        <p-button
+          label="Back"
+          variant="outlined"
+          icon="pi pi-arrow-circle-left"
+          iconPos="right"
+          severity="secondary"
+          (click)="goBack()"
+        />
+      </div>
+    </div>
 
-        <div class="submenu">
+    <div class="store-content">
+      <div class="parking-layout">
+        <img src="{{ store.parkingLayoutPath }}" alt="" />
+      </div>
 
-            <div class="store-info">
-                <h4 style="font-size: 45px; font-weight: bold; margin: 0">
-                    {{store.storeName}}
-                </h4>
-                <h5 style=" padding-top: 10px; margin: 0; opacity: 70%;">
-                    Address: {{store.storeAddress}}
-                </h5>
-            </div>
-
-            <div class="buttons">
-                <p-button label="Edit" variant="outlined" icon="pi pi-pen-to-square" iconPos="right" severity="info" (click)="updateStore()"/>
-                <p-button label="Remove" variant="outlined" icon="pi pi-trash" iconPos="right" severity="danger" (click)="removeStore()"/>
-                <p-button label="Back" variant="outlined" icon="pi pi-arrow-circle-left" iconPos="right" severity="secondary" (click)="goBack()"/>
-            </div>
-        </div>
-
-        <div class="store-content">
-            <div class="parking-layout">
-                  <img src="https://parkinglayoutada.s3.us-east-1.amazonaws.com/parking_layout_1.svg" alt="">
-            </div>
-    
-            <!-- <p-divider layout="vertical" />
+      <!-- <p-divider layout="vertical" />
 
             <div class="store-data">
                 <p>Capacity: 90%</p>
                 <p>Parking lots: 100</p>
             </div> -->
-
-        </div>
-        
     </div>
-</div>  
-
+  </div>
+</div>
