@@ -56,7 +56,7 @@ public class WorkersController {
     }
 
     @PostMapping("/worker/initialize")
-    public ResponseEntity< ParkingLot> initializeWorker(@RequestBody StoreRequest storeRequest) {
+    public ResponseEntity< ParkingLot> initializeWorker(@RequestBody StoreRequest storeRequest) throws InterruptedException {
         ParkingLot parkingLot = workerService.setupWorker(storeRequest);
         return ResponseEntity.ok(parkingLot);
     }

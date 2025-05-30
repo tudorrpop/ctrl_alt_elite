@@ -3,20 +3,16 @@ package smartParkSwarm.backend.SmartParkSwarm_Back.model.request;
 public class StoreRequest {
     private String storeName;
     private String storeAddress;
-    private Integer capacity;
-    private String parkingLayout;
-    private String IpAddress;
+    private String parkingLayoutPath;
 
     public StoreRequest(String storeName,
                         String storeAddress,
-                        Integer capacity,
-                        String parkingLayout,
-                        String IpAddress) {
+                        String parkingLayout
+                        //String IpAddress
+                        ) {
         this.storeName = storeName;
         this.storeAddress = storeAddress;
-        this.capacity = capacity;
-        this.parkingLayout = parkingLayout;
-        this.IpAddress = IpAddress;
+        this.parkingLayoutPath = parkingLayout;
     }
 
     public String getStoreName() {
@@ -27,15 +23,7 @@ public class StoreRequest {
         return storeAddress;
     }
 
-    public String getParkingLayout() {
-        return parkingLayout;
-    }
-
-    public Integer getCapacity() {
-        return capacity;
-    }
-
-    public String getIpAddress() {
-        return IpAddress;
+    public String getParkingLayoutPath() {
+        return parkingLayoutPath;
     }
 }
