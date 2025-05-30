@@ -12,12 +12,8 @@ import smartParkSwarm.backend.SmartParkSwarm_Back.model.response.StoreModel;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.response.StoreOverviewModel;
 
 import smartParkSwarm.backend.SmartParkSwarm_Back.service.StoreService;
-import smartParkSwarm.backend.SmartParkSwarm_Back.service.WorkerService;
 
-import javax.net.ssl.SSLEngineResult;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 @RestController
 public class StoreController {
@@ -36,15 +32,15 @@ public class StoreController {
 
     // Method for testing the creation of multiple stores (WITHOUT WORKER INITIALIZATION).
     // The worker initialization functionality is in WorkersController -> WorkerService
-    @PostMapping("/stores")
-    public ResponseEntity<StoreOverviewModel> createStore(@RequestBody StoreRequest storeRequest) {
-        StoreOverviewModel storeOverviewModel = storeService.saveStore(storeRequest);
-        return ResponseEntity.ok(storeOverviewModel);
-    }
+//    @PostMapping("/stores")
+//    public ResponseEntity<StoreOverviewModel> createStore(@RequestBody StoreRequest storeRequest) {
+//        StoreOverviewModel storeOverviewModel = storeService.saveStore(storeRequest);
+//        return ResponseEntity.ok(storeOverviewModel);
+//    }
 
     @PutMapping("/stores/{id}")
-    public ResponseEntity<StoreOverviewModel> edit(@PathVariable Long id, @RequestBody StoreRequest storeRequest) {
-        StoreOverviewModel updatedStore = storeService.editStore(id, storeRequest);
+    public ResponseEntity<StoreModel> edit(@PathVariable Long id, @RequestBody StoreRequest storeRequest) {
+        StoreModel updatedStore = storeService.editStore(id, storeRequest);
         return ResponseEntity.ok(updatedStore);
     }
 

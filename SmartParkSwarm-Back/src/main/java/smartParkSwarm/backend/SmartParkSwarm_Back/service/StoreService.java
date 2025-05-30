@@ -4,7 +4,6 @@ import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.entity.Store;
-import smartParkSwarm.backend.SmartParkSwarm_Back.model.enums.ParkingLayout;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.request.StoreRequest;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.response.StoreModel;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.response.StoreOverviewModel;
@@ -23,17 +22,16 @@ public class StoreService {
         this.storeRepository = storeRepository;
     }
 
-    public StoreOverviewModel saveStore(StoreRequest storeRequest) {
+    public Integer saveStore(StoreRequest storeRequest, String fullFQDNandPort) {
 
         if(storeRequest.getStoreName() == null
                 || storeRequest.getStoreAddress() == null
-                || storeRequest.getParkingLayout() == null
-                || storeRequest.getCapacity() == null
-                || storeRequest.getIpAddress() == null
+                || storeRequest.getParkingLayoutPath() == null
+                || fullFQDNandPort == null
                 || storeRequest.getStoreName().isBlank()
                 || storeRequest.getStoreAddress().isBlank()
-                || storeRequest.getParkingLayout().isBlank()
-                || storeRequest.getIpAddress().isBlank()
+                || storeRequest.getParkingLayoutPath().isBlank()
+
         ) {
             throw new IllegalArgumentException("Invalid fields: null or empty");
         }
@@ -43,20 +41,35 @@ public class StoreService {
             throw new EntityExistsException("A store with this name exists");
         }
 
+        String layout = "";
+        Integer capacity = 0;
+        if(storeRequest.getParkingLayoutPath().equals("Grid")) {
+            layout = "https://parkinglayoutada.s3.us-east-1.amazonaws.com/parking_layout_1.svg";
+            capacity = 29;
+        }else if(storeRequest.getParkingLayoutPath().equals("Stripe")) {
+            layout = "https://parkinglayoutada.s3.us-east-1.amazonaws.com/parking_layout_2.svg";
+            capacity = 24;
+        }else{
+            layout= "https://parkinglayoutada.s3.us-east-1.amazonaws.com/parking_layout_3.svg";
+            capacity = 20;
+        }
+
         Store store = new Store(
                 storeRequest.getStoreName(),
                 storeRequest.getStoreAddress(),
-                storeRequest.getParkingLayout(),
-                storeRequest.getCapacity(),
-                storeRequest.getIpAddress()
+                layout,
+                capacity,
+                fullFQDNandPort
         );
         storeRepository.save(store);
-        Optional<Store> returnedStored = storeRepository.findByStoreName(store.getStoreName());
-        return returnedStored.map(value -> new StoreOverviewModel(
-                value.getId(),
-                value.getStoreName(),
-                value.getStoreAddress()
-        )).orElseThrow(() -> new EntityNotFoundException("A store with this name does not exist"));
+        return capacity;
+
+        //Optional<Store> returnedStored = storeRepository.findByStoreName(store.getStoreName());
+//        return returnedStored.map(value -> new StoreOverviewModel(
+//                value.getId(),
+//                value.getStoreName(),
+//                value.getStoreAddress()
+//        )).orElseThrow(() -> new EntityNotFoundException("A store with this name does not exist"));
     }
 
     public List<StoreOverviewModel> getStores() {
@@ -89,14 +102,14 @@ public class StoreService {
         throw new EntityNotFoundException("A store with this name does not exist");
     }
 
-    public StoreOverviewModel editStore(Long id, StoreRequest storeRequest) {
+    public StoreModel editStore(Long id, StoreRequest storeRequest) {
 
         if(storeRequest.getStoreName() == null
                 || storeRequest.getStoreAddress() == null
-                || storeRequest.getParkingLayout() == null
+                || storeRequest.getParkingLayoutPath() == null
                 || storeRequest.getStoreName().isBlank()
                 || storeRequest.getStoreAddress().isBlank()
-                || storeRequest.getParkingLayout().isBlank()
+                || storeRequest.getParkingLayoutPath().isBlank()
         ) {
             throw new IllegalArgumentException("Invalid fields: null or empty");
         }
@@ -112,13 +125,13 @@ public class StoreService {
         }
         foundStore.get().setStoreName(storeRequest.getStoreName());
         foundStore.get().setStoreAddress(storeRequest.getStoreAddress());
-        foundStore.get().setParkingLayout(storeRequest.getParkingLayout());
         storeRepository.save(foundStore.get());
 
-        return new StoreOverviewModel(
+        return new StoreModel(
                 foundStore.get().getId(),
                 foundStore.get().getStoreName(),
-                foundStore.get().getStoreAddress()
+                foundStore.get().getStoreAddress(),
+                foundStore.get().getParkingLayout()
         );
     }
 }
