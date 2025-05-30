@@ -7,6 +7,8 @@ import { NavbarComponent } from "../shared/navbar/navbar.component";
 import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
 import { ParkingSpotStatus } from '../../data/model/parking-spot-status.model';
+import { DialogService } from 'primeng/dynamicdialog';
+import { StoreCreationComponent } from '../dialog/store-creation/store-creation.component';
 
 @Component({
   selector: 'app-store',
@@ -15,6 +17,9 @@ import { ParkingSpotStatus } from '../../data/model/parking-spot-status.model';
     NavbarComponent,
     ButtonModule,
     DividerModule
+  ],
+  providers: [
+    DialogService
   ],
   templateUrl: './store.component.html',
   styleUrl: './store.component.scss'
@@ -28,7 +33,8 @@ export class StoreComponent implements OnInit{
     private storeService: StoreService,
     private route: ActivatedRoute,
     private router: Router,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private dialogService: DialogService
   ){}
 
   ngOnInit(): void {
@@ -90,4 +96,32 @@ export class StoreComponent implements OnInit{
       }
     });
   }
+
+  public updateStore(): void {
+      const ref = this.dialogService.open(StoreCreationComponent, {
+          closable: true,
+          modal: true,
+          data: {
+            storeModel: this.store,
+          }
+      });
+      ref.onClose.subscribe((data) => {
+        if (data) {
+          this.storeService.updateStore(this.store.storeId, data).subscribe({
+            next: (response) => {
+              this.store = response;
+  
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Created Store!',
+                detail: `Created store ${response.storeName} successfully.`,
+              });
+            },
+          });
+  
+        } 
+      });
+    }
+
+
 }

@@ -70,4 +70,14 @@ export class StoreService {
     );
   }
 
+  public updateStore(id: number, storeRequest: StoreRequest): Observable<StoreModel> {
+    const headers = this.getAuthHeaders();    
+    
+    return this.httpClient.put<StoreModel>(
+      `${this.baseUrl}/stores/${id}`, 
+      storeRequest,
+      { headers, withCredentials: true }
+    );
+  }
+
 }

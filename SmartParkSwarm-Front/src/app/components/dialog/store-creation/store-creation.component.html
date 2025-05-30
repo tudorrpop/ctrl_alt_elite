@@ -12,22 +12,41 @@
         <label for="parkingLayout">Parking Layout:</label>
         <div class="parkingLayoutButtons">
             <input pInputText id="parkingLayout"  style="font-style: italic;" [disabled]="true" [(ngModel)]="parkingLayout" placeholder="- no selection -" />
-            <p-button label="Select Layout" severity="secondary" icon="pi pi-objects-column" iconPos="right" (click)="openLayoutDialog()" class="button-cancel"/>    
+            <p-button 
+                label="Select Layout" 
+                severity="secondary" 
+                icon="pi pi-objects-column" 
+                iconPos="right" 
+                (click)="openLayoutDialog()" 
+                class="button-cancel" 
+                [disabled]="edit"
+                [pTooltip]="edit ? 'Layout selection disabled' : undefined"
+                tooltipPosition="right">
+            </p-button>
         </div>
     </div>
 
     
     <div class="buttons">
         <button pButton label="Cancel" severity="danger" (click)="cancelAction()" class="button-cancel p-button-outlined"></button>
-        <button pButton  label="Save" [disabled]="!storeName || !storeAddress || !parkingLayout" 
+        <button *ngIf="!edit" pButton  label="Save" [disabled]="!storeName || !storeAddress || !parkingLayout" 
             [pTooltip]="(!storeName || !storeAddress || !parkingLayout) ? 'All fields required!' : undefined"tooltipPosition="bottom"
             (click)="saveAction()" class="button-save p-button-outlined"></button>
+        <button *ngIf="edit" pButton  label="Update" (click)="saveAction()" class="button-save p-button-outlined"></button>
     </div>
 </div>
 
 
 <!-- Layout Selection Dialog -->
-<p-dialog [(visible)]="layoutSelectionDialog" [closable]="true" modal="true" header="Select Parking Layout" [style]="{width: '500px'}" (onHide)="layoutSelectionDialog = false">
+<p-dialog 
+    [(visible)]="layoutSelectionDialog" 
+    appendTo="body"
+    [closable]="true" 
+    modal="true" 
+    header="Select Parking Layout" 
+    [draggable]="false"
+    [style]="{width: '500px'}" 
+    (onHide)="layoutSelectionDialog = false">
     <div class="layout-options">
         <div *ngFor="let layout of layouts" class="layout-item" (click)="selectLayout(layout.name)">
             <img [src]="layout.image" [alt]="layout.name" class="layout-image">

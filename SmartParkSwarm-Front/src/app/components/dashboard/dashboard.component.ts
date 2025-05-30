@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 import { StoreOverviewModel } from '../../data/model/store-overview.model';
 import { ButtonModule } from 'primeng/button';
 import { StoreCreationComponent } from '../dialog/store-creation/store-creation.component';
-import { DialogService } from 'primeng/dynamicdialog';
+import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
 import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { CustomerModel } from '../../data/model/customer.model';
@@ -20,11 +20,13 @@ import { UserService } from '../../services/user/user.service';
     CardModule, 
     CommonModule, 
     TabsModule,
-    ButtonModule
+    ButtonModule,
+    DynamicDialogModule
   ],
   providers: [
     DialogService
   ],
+  standalone: true,
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
@@ -64,7 +66,10 @@ export class DashboardComponent implements OnInit{
   }
 
   public createStore(): void {
-    const ref = this.dialogService.open(StoreCreationComponent, {});
+    const ref = this.dialogService.open(StoreCreationComponent, {
+      modal: true,
+      closable: true
+    });
     ref.onClose.subscribe((data) => {
       if (data) {
         this.storeService.createStore(data).subscribe({
