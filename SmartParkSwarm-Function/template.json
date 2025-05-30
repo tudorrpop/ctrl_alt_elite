@@ -14,10 +14,16 @@
         "target_port": {
             "type": "int"
         },
+        "exposed_port": {
+            "type": "int"
+        },
         "container_image": {
             "type": "String"
         },
         "container_name": {
+            "type": "String"
+        },
+        "registry_server": {
             "type": "String"
         }
     },
@@ -40,16 +46,25 @@
                     "ingress": {
                         "external": true,
                         "targetPort": "[parameters('target_port')]",
-                        "exposedPort": 0,
-                        "transport": "Auto",
+                        "exposedPort": "[parameters('exposed_port')]",
+                        "transport": "Tcp",
                         "traffic": [
                             {
                                 "weight": 100,
                                 "latestRevision": true
                             }
                         ],
-                        "allowInsecure": false
-                    },
+                        "allowInsecure": false,
+                        "stickySessions": {
+                            "affinity": "none"
+                        }
+					},
+					"registries": [
+						{
+							"server": "[parameters('registry_server')]",
+							"identity": "system-environment"
+						}
+					],
                     "maxInactiveRevisions": 100,
                     "identitySettings": []
                 },
@@ -65,8 +80,8 @@
                         }
                     ],
                     "scale": {
-                        "minReplicas": 0,
-                        "maxReplicas": 10,
+                        "minReplicas": 1,
+                        "maxReplicas": 1,
                         "cooldownPeriod": 300,
                         "pollingInterval": 30
                     }
