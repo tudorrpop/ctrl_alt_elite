@@ -24,7 +24,7 @@ import { StoreCreationComponent } from '../dialog/store-creation/store-creation.
   templateUrl: './store.component.html',
   styleUrl: './store.component.scss'
 })
-export class StoreComponent implements OnInit{
+export class StoreComponent implements OnInit {
 
   store: StoreModel = {} as StoreModel;
   eventSource!: EventSource;
@@ -35,41 +35,42 @@ export class StoreComponent implements OnInit{
     private router: Router,
     private messageService: MessageService,
     private dialogService: DialogService
-  ){}
+  ) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
 
       const storeId = params.get('storeId');
       if (storeId) {
-      this.storeService.fetchStore(+storeId).subscribe({
-        next: (storeModel) => {
-          this.store = storeModel;
-          this.storeService.initialParkingLotStatus().subscribe({
-            next: (statuses) => {
-              this.updateParkingSpotColors(statuses);
-            }
-          });
-        },
+        this.storeService.fetchStore(+storeId).subscribe({
+          next: (storeModel) => {
+            this.store = storeModel;
+            this.storeService.initialParkingLotStatus().subscribe({
+              next: (statuses) => {
+                this.updateParkingSpotColors(statuses);
+              }
+            });
+          },
 
-        error: () => {
-          this.messageService.add({
-            severity: 'warn',
-            summary: 'Oops! Something went wrong.',
-            detail: 'Unable to open the store page.',
-          });
-          this.router.navigate(['/dashboard']);
-        }
-      });
+          error: () => {
+            this.messageService.add({
+              severity: 'warn',
+              summary: 'Oops! Something went wrong.',
+              detail: 'Unable to open the store page.',
+            });
+            this.router.navigate(['/dashboard']);
+          }
+        });
       }
     });
 
     // ParkinLot UPDATES
     this.eventSource = new EventSource('http://localhost:8083/sse');
     this.eventSource.addEventListener('message', (event: MessageEvent) => {
+      console.log(JSON.parse(event.data));
       this.updateParkingSpotColors(JSON.parse(event.data));
     });
-    
+
   }
 
   ngOnDestroy(): void {
@@ -85,7 +86,7 @@ export class StoreComponent implements OnInit{
     });
   }
 
-  public goBack(): void{
+  public goBack(): void {
     this.router.navigate(['/dashboard']);
   }
 
@@ -98,30 +99,30 @@ export class StoreComponent implements OnInit{
   }
 
   public updateStore(): void {
-      const ref = this.dialogService.open(StoreCreationComponent, {
-          closable: true,
-          modal: true,
-          data: {
-            storeModel: this.store,
-          }
-      });
-      ref.onClose.subscribe((data) => {
-        if (data) {
-          this.storeService.updateStore(this.store.storeId, data).subscribe({
-            next: (response) => {
-              this.store = response;
-  
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Created Store!',
-                detail: `Created store ${response.storeName} successfully.`,
-              });
-            },
-          });
-  
-        } 
-      });
-    }
+    const ref = this.dialogService.open(StoreCreationComponent, {
+      closable: true,
+      modal: true,
+      data: {
+        storeModel: this.store,
+      }
+    });
+    ref.onClose.subscribe((data) => {
+      if (data) {
+        this.storeService.updateStore(this.store.storeId, data).subscribe({
+          next: (response) => {
+            this.store = response;
+
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Created Store!',
+              detail: `Created store ${response.storeName} successfully.`,
+            });
+          },
+        });
+
+      }
+    });
+  }
 
 
 }

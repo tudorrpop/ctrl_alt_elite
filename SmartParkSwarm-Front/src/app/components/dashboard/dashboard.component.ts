@@ -17,8 +17,8 @@ import { UserService } from '../../services/user/user.service';
   selector: 'app-dashboard',
   imports: [
     NavbarComponent,
-    CardModule, 
-    CommonModule, 
+    CardModule,
+    CommonModule,
     TabsModule,
     ButtonModule,
     DynamicDialogModule
@@ -30,7 +30,7 @@ import { UserService } from '../../services/user/user.service';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
-export class DashboardComponent implements OnInit{
+export class DashboardComponent implements OnInit {
 
   stores!: StoreOverviewModel[];
   customers!: CustomerModel[];
@@ -41,14 +41,14 @@ export class DashboardComponent implements OnInit{
     private userService: UserService,
     private dialogService: DialogService,
     private messageService: MessageService
-  ){}
+  ) { }
 
   public ngOnInit(): void {
     this.storeService.fetchStores().subscribe({
       next: (response) => {
         this.stores = response;
         console.log(response);
-        
+
       }
     });
 
@@ -56,7 +56,7 @@ export class DashboardComponent implements OnInit{
       next: (response) => {
         this.customers = response;
         console.log(response);
-        
+
       }
     });
   }
