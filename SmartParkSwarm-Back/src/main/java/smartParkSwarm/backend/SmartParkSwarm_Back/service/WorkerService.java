@@ -9,6 +9,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.entity.Store;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.request.StoreRequest;
+import smartParkSwarm.backend.SmartParkSwarm_Back.model.response.StoreOverviewModel;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.worker.ParkingLot;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.worker.ParkingSpot;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.worker.VehicleEntry;
@@ -30,7 +31,7 @@ public class WorkerService {
         this.storeService = storeService;
     }
 
-    public ParkingLot setupWorker(StoreRequest storeRequest) throws InterruptedException {
+    public StoreOverviewModel setupWorker(StoreRequest storeRequest) throws InterruptedException {
 
         //lambda from Azure call
         Integer exportPort =  ThreadLocalRandom.current().nextInt(8000, 9000);
@@ -48,13 +49,18 @@ public class WorkerService {
 
         //Thread.sleep(45000);
 
-        Integer capacity = storeService.saveStore(storeRequest, fullFQDNandPort);
+        Store store = storeService.saveStore(storeRequest, fullFQDNandPort);
 
         Map<String, Object> requestBody = Map.of(
                 "name", storeRequest.getStoreName(),
                 "location", storeRequest.getStoreAddress(),
-                "capacity", capacity);
-        return createData(fullFQDNandPort, "/api/setup", requestBody, ParkingLot.class).block();
+                "capacity", store.getCapacity());
+        createData(fullFQDNandPort, "/api/setup", requestBody, ParkingLot.class).block();
+        return new StoreOverviewModel(
+            store.getId(),
+                store.getStoreName(),
+                store.getStoreAddress()
+        );
     }
 
 

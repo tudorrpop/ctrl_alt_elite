@@ -22,7 +22,7 @@ public class StoreService {
         this.storeRepository = storeRepository;
     }
 
-    public Integer saveStore(StoreRequest storeRequest, String fullFQDNandPort) {
+    public Store saveStore(StoreRequest storeRequest, String fullFQDNandPort) {
 
         if(storeRequest.getStoreName() == null
                 || storeRequest.getStoreAddress() == null
@@ -62,7 +62,7 @@ public class StoreService {
                 fullFQDNandPort
         );
         storeRepository.save(store);
-        return capacity;
+        return store;
 
         //Optional<Store> returnedStored = storeRepository.findByStoreName(store.getStoreName());
 //        return returnedStored.map(value -> new StoreOverviewModel(

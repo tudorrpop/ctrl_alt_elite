@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.request.StoreRequest;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.response.ParkingSpotStatus;
+import smartParkSwarm.backend.SmartParkSwarm_Back.model.response.StoreOverviewModel;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.worker.ParkingLot;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.worker.ParkingSpot;
 import smartParkSwarm.backend.SmartParkSwarm_Back.service.UserService;
@@ -56,9 +57,9 @@ public class WorkersController {
     }
 
     @PostMapping("/worker/initialize")
-    public ResponseEntity< ParkingLot> initializeWorker(@RequestBody StoreRequest storeRequest) throws InterruptedException {
-        ParkingLot parkingLot = workerService.setupWorker(storeRequest);
-        return ResponseEntity.ok(parkingLot);
+    public ResponseEntity<StoreOverviewModel> initializeWorker(@RequestBody StoreRequest storeRequest) throws InterruptedException {
+        StoreOverviewModel storeOverviewModel = workerService.setupWorker(storeRequest);
+        return ResponseEntity.ok(storeOverviewModel);
     }
 
 
