@@ -9,6 +9,7 @@ from azure.mgmt.resource.resources.models import DeploymentMode
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
 
+# Also set the following environment variables: AZURE_CLIENT_ID, AZURE_TENANT_ID, AZURE_CLIENT_SECRET
 @app.route(route="containerapp_creator")
 def containerapp_creator(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Processing request to create Container App.')
@@ -19,6 +20,9 @@ def containerapp_creator(req: func.HttpRequest) -> func.HttpResponse:
         return func.HttpResponse("Invalid JSON in request body.", status_code=400)
 
     name = req_body.get('name')
+    target_port = req_body.get('targetPort')
+    exposed_port = req_body.get('exposedPort')
+    container_name = req_body.get('containerName')
     if not name:
         return func.HttpResponse("Please provide 'name' in the request body.", status_code=400)
 
@@ -27,9 +31,11 @@ def containerapp_creator(req: func.HttpRequest) -> func.HttpResponse:
     resource_group = os.environ.get("AZURE_RESOURCE_GROUP")
     managed_env_id = os.environ.get("MANAGED_ENVIRONMENT_ID")
     location = os.environ.get("LOCATION_NAME", "Poland Central")  # Optional default
-    target_port = int(os.environ.get("TARGET_PORT", 80))
+    # target_port = int(os.environ.get("TARGET_PORT", 80))
+    # exposed_port = int(os.environ.get("EXPOSED_PORT", 80))
     container_image = os.environ.get("CONTAINER_IMAGE")
-    container_name = os.environ.get("CONTAINER_NAME")
+    # container_name = os.environ.get("CONTAINER_NAME")
+    registry_server = os.environ.get("REGISTRY_SERVER")
 
     if not all([subscription_id, resource_group, managed_env_id, container_image, container_name]):
         return func.HttpResponse("Missing required environment variables.", status_code=500)
@@ -53,8 +59,10 @@ def containerapp_creator(req: func.HttpRequest) -> func.HttpResponse:
                     "managedEnvironment_id": {"value": managed_env_id},
                     "location_name": {"value": location},
                     "target_port": {"value": target_port},
+                    "exposed_port": {"value": exposed_port},
                     "container_image": {"value": container_image},
                     "container_name": {"value": container_name},
+                    "registry_server": {"value": registry_server},
                 },
                 "mode": DeploymentMode.incremental
             }
