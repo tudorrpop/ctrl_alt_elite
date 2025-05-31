@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.request.StoreRequest;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.response.ParkingSpotStatus;
+import smartParkSwarm.backend.SmartParkSwarm_Back.model.response.StoreOverviewModel;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.worker.ParkingLot;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.worker.ParkingSpot;
 import smartParkSwarm.backend.SmartParkSwarm_Back.service.UserService;
@@ -20,6 +21,7 @@ public class WorkersController {
 
     @Autowired
     private WorkerService workerService;
+
 
     @Autowired
     private SseController sseController;
@@ -44,11 +46,12 @@ public class WorkersController {
     }
 
     @PutMapping("/worker/update")
-    public ResponseEntity<List<ParkingSpotStatus>> updateParkingLot() {
-        List<ParkingSpot> list = workerService.fetchAllParkingSpots("127.0.0.1:8000");
+    public ResponseEntity<List<ParkingSpotStatus>> updateParkingLot(@RequestParam Integer id) {
+        Long idL = id.longValue();
+        List<ParkingSpot> list = workerService.fetchAllParkingSpots(idL);
         List<ParkingSpotStatus> test = list.stream().map(spot ->
                 new ParkingSpotStatus(
-                        "P" + spot.getSpot_number(),
+                        spot.getSpot_number(),
                         spot.is_occupied())).toList();
 
         sseController.broadcast(test);
@@ -56,9 +59,9 @@ public class WorkersController {
     }
 
     @PostMapping("/worker/initialize")
-    public ResponseEntity< ParkingLot> initializeWorker(@RequestBody StoreRequest storeRequest) {
-        ParkingLot parkingLot = workerService.setupWorker(storeRequest);
-        return ResponseEntity.ok(parkingLot);
+    public ResponseEntity<StoreOverviewModel> initializeWorker(@RequestBody StoreRequest storeRequest) throws InterruptedException {
+        StoreOverviewModel storeOverviewModel = workerService.setupWorker(storeRequest);
+        return ResponseEntity.ok(storeOverviewModel);
     }
 
 

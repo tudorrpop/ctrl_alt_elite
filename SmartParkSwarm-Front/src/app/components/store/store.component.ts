@@ -7,6 +7,9 @@ import { NavbarComponent } from "../shared/navbar/navbar.component";
 import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
 import { ParkingSpotStatus } from '../../data/model/parking-spot-status.model';
+import { DialogService } from 'primeng/dynamicdialog';
+import { StoreCreationComponent } from '../dialog/store-creation/store-creation.component';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-store',
@@ -16,36 +19,60 @@ import { ParkingSpotStatus } from '../../data/model/parking-spot-status.model';
     ButtonModule,
     DividerModule
   ],
+  providers: [
+    DialogService
+  ],
   templateUrl: './store.component.html',
   styleUrl: './store.component.scss'
 })
-export class StoreComponent implements OnInit{
+export class StoreComponent implements OnInit {
 
   store: StoreModel = {} as StoreModel;
   eventSource!: EventSource;
+  svgContent: string = '';
 
   constructor(
     private storeService: StoreService,
     private route: ActivatedRoute,
     private router: Router,
-    private messageService: MessageService
-  ){}
+    private messageService: MessageService,
+    private dialogService: DialogService,
+    private http: HttpClient
+  ) { }
 
-  ngOnInit(): void {
-    this.route.paramMap.subscribe((params) => {
-
-      const storeId = params.get('storeId');
-      if (storeId) {
+ngOnInit(): void {
+  this.route.paramMap.subscribe((params) => {
+    const storeId = params.get('storeId');
+    if (storeId) {
       this.storeService.fetchStore(+storeId).subscribe({
         next: (storeModel) => {
           this.store = storeModel;
-          this.storeService.initialParkingLotStatus().subscribe({
-            next: (statuses) => {
-              this.updateParkingSpotColors(statuses);
+
+          this.http.get(storeModel.parkingLayoutPath.toString(), { responseType: 'text' }).subscribe({
+            next: (svg) => {
+              const container = document.getElementById('svg-container');
+              if (container) {
+                container.innerHTML = svg;
+
+                console.log(this.store.storeId);
+                this.storeService.initialParkingLotStatus(this.store.storeId).subscribe({
+                  next: (statuses) => {
+                    this.updateParkingSpotColors(statuses);
+                  }
+                });
+
+                
+                this.eventSource = new EventSource('http://localhost:8083/sse');
+                this.eventSource.addEventListener('message', (event: MessageEvent) => {
+                  this.updateParkingSpotColors(JSON.parse(event.data));
+                });
+              }
+            },
+            error: () => {
+              console.error('Failed to load SVG');
             }
           });
         },
-
         error: () => {
           this.messageService.add({
             severity: 'warn',
@@ -55,15 +82,16 @@ export class StoreComponent implements OnInit{
           this.router.navigate(['/dashboard']);
         }
       });
-      }
-    });
+    }
+  });
+
 
     // ParkinLot UPDATES
     this.eventSource = new EventSource('http://localhost:8083/sse');
     this.eventSource.addEventListener('message', (event: MessageEvent) => {
       this.updateParkingSpotColors(JSON.parse(event.data));
     });
-    
+
   }
 
   ngOnDestroy(): void {
@@ -79,7 +107,7 @@ export class StoreComponent implements OnInit{
     });
   }
 
-  public goBack(): void{
+  public goBack(): void {
     this.router.navigate(['/dashboard']);
   }
 
@@ -90,4 +118,32 @@ export class StoreComponent implements OnInit{
       }
     });
   }
+
+  public updateStore(): void {
+    const ref = this.dialogService.open(StoreCreationComponent, {
+      closable: true,
+      modal: true,
+      data: {
+        storeModel: this.store,
+      }
+    });
+    ref.onClose.subscribe((data) => {
+      if (data) {
+        this.storeService.updateStore(this.store.storeId, data).subscribe({
+          next: (response) => {
+            this.store = response;
+
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Created Store!',
+              detail: `Created store ${response.storeName} successfully.`,
+            });
+          },
+        });
+
+      }
+    });
+  }
+
+
 }

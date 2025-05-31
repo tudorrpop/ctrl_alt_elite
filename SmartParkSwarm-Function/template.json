@@ -1,0 +1,98 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "containerapp_name": {
+            "type": "String"
+        },
+        "managedEnvironment_id": {
+            "type": "String"
+        },
+        "location_name": {
+            "type": "String"
+        },
+        "target_port": {
+            "type": "int"
+        },
+        "exposed_port": {
+            "type": "int"
+        },
+        "container_image": {
+            "type": "String"
+        },
+        "container_name": {
+            "type": "String"
+        },
+        "registry_server": {
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.App/containerapps",
+            "apiVersion": "2025-01-01",
+            "name": "[parameters('containerapp_name')]",
+            "location": "[parameters('location_name')]",
+            "identity": {
+                "type": "None"
+            },
+            "properties": {
+                "managedEnvironmentId": "[parameters('managedEnvironment_id')]",
+                "environmentId": "[parameters('managedEnvironment_id')]",
+                "workloadProfileName": "Consumption",
+                "configuration": {
+                    "activeRevisionsMode": "Single",
+                    "ingress": {
+                        "external": true,
+                        "targetPort": "[parameters('target_port')]",
+                        "exposedPort": "[parameters('exposed_port')]",
+                        "transport": "Tcp",
+                        "traffic": [
+                            {
+                                "weight": 100,
+                                "latestRevision": true
+                            }
+                        ],
+                        "allowInsecure": false,
+                        "stickySessions": {
+                            "affinity": "none"
+                        }
+					},
+					"registries": [
+						{
+							"server": "[parameters('registry_server')]",
+							"identity": "system-environment"
+						}
+					],
+                    "maxInactiveRevisions": 100,
+                    "identitySettings": []
+                },
+                "template": {
+                    "containers": [
+                        {
+                            "image": "[parameters('container_image')]",
+                            "name": "[parameters('container_name')]",
+                            "resources": {
+                                "cpu": 0.25,
+                                "memory": "0.5Gi"
+                            }
+                        }
+                    ],
+                    "scale": {
+                        "minReplicas": 1,
+                        "maxReplicas": 1,
+                        "cooldownPeriod": 300,
+                        "pollingInterval": 30
+                    }
+                }
+            }
+        }
+    ],
+    "outputs": {
+        "fqdn": {
+            "type": "string",
+            "value": "[reference(resourceId('Microsoft.App/containerApps', parameters('containerapp_name'))).latestRevisionFqdn]"
+        }
+    }
+}

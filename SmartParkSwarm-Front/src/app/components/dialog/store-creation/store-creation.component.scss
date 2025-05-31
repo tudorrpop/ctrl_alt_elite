@@ -84,3 +84,8 @@ input {
     border-radius: 8px;
     object-fit: contain;
 }
+
+::ng-deep .p-dialog-mask + .p-dialog-visible {
+  background-color: transparent;
+  box-shadow: none;
+}

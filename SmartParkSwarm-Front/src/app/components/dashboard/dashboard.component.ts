@@ -7,11 +7,13 @@ import { CommonModule } from '@angular/common';
 import { StoreOverviewModel } from '../../data/model/store-overview.model';
 import { ButtonModule } from 'primeng/button';
 import { StoreCreationComponent } from '../dialog/store-creation/store-creation.component';
-import { DialogService } from 'primeng/dynamicdialog';
+import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
 import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { CustomerModel } from '../../data/model/customer.model';
 import { UserService } from '../../services/user/user.service';
+import { GoogleMapsModule } from '@angular/google-maps';
+import { CustomerInfoComponent } from '../dialog/customer-info/customer-info.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -20,11 +22,14 @@ import { UserService } from '../../services/user/user.service';
     CardModule,
     CommonModule,
     TabsModule,
-    ButtonModule
+    ButtonModule,
+    DynamicDialogModule,
+    GoogleMapsModule
   ],
   providers: [
     DialogService
   ],
+  standalone: true,
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
@@ -32,6 +37,32 @@ export class DashboardComponent implements OnInit{
 
   stores!: StoreOverviewModel[];
   customers!: CustomerModel[];
+  
+  mapCenter: google.maps.LatLngLiteral = { lat: 45.7540, lng: 21.2275 }; 
+  zoom = 12;
+
+  markers = [
+  {
+    position: { lat: 45.7542, lng: 21.2265 },
+    label: 'Kaufland Timișoara 1',
+    title: 'Kaufland Timișoara Calea Martirilor 1989'
+  },
+  {
+    position: { lat: 45.7498, lng: 21.2124 },
+    label: 'Kaufland Timișoara 2',
+    title: 'Kaufland Timișoara Strada Chimiștilor 5-9'
+  },
+  {
+    position: { lat: 45.7612, lng: 21.2220 },
+    label: 'Kaufland Timișoara 3',
+    title: 'Kaufland Timișoara Calea Aradului 110'
+  },
+  {
+    position: { lat: 45.7530, lng: 21.2300 },
+    label: 'Kaufland Timișoara 4',
+    title: 'Kaufland Timișoara Bd. Take Ionescu 11'
+  }
+];
 
   constructor(
     private router: Router,
@@ -39,34 +70,33 @@ export class DashboardComponent implements OnInit{
     private userService: UserService,
     private dialogService: DialogService,
     private messageService: MessageService
-  ){}
+  ) { 
+  }
 
   public ngOnInit(): void {
-    this.storeService.fetchStores().subscribe({
-      next: (response) => {
-        this.stores = response;
-        console.log(response);
+  this.storeService.fetchStores().subscribe({
+    next: async (response) => {
+      this.stores = response;
+    }
+  });
 
-      }
-    });
+  this.userService.fetchUsers().subscribe({
+    next: (response) => {
+      this.customers = response;
+    }
+  });
+}
 
-    this.userService.fetchUsers().subscribe({
-      next: (response) => {
-        this.customers = response;
-        console.log(response);
-
-      }
-    });
-
-    this.getCurrentUser();
-  }
 
   public navigateToStore(storeId: number): void {
     this.router.navigate([`/store/${storeId}`]);
   }
 
   public createStore(): void {
-    const ref = this.dialogService.open(StoreCreationComponent, {});
+    const ref = this.dialogService.open(StoreCreationComponent, {
+      modal: true,
+      closable: true
+    });
     ref.onClose.subscribe((data) => {
       if (data) {
         this.storeService.createStore(data).subscribe({
@@ -98,16 +128,20 @@ export class DashboardComponent implements OnInit{
       }
     });
   }
+  
+  public showUserInfo(id: number): void {
+    this.userService.fetchCustomer(id).subscribe({
+    next: (response) => {
+      const user = response;
 
-  getCurrentUser() {
-    this.userService.getCurrentUser(3).subscribe({
-      next: (user: any) => {
-        console.log('Current User:', user);
-      },
-      error: (error: any) => {
-        console.error('Error fetching current user:', error);
+      this.dialogService.open(CustomerInfoComponent, {
+        data: { user: user },
+        header: 'User Information',
+        modal: true,
+        closable: true
+      });
       }
-    });
+     });
   }
 
 }
