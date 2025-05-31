@@ -44,13 +44,13 @@ public class StoreService {
         String layout = "";
         Integer capacity = 0;
         if(storeRequest.getParkingLayoutPath().equals("Grid")) {
-            layout = "https://parkinglayoutada.s3.us-east-1.amazonaws.com/parking_layout_1.svg";
+            layout = "/parking_layout_svg/parking_layout_1.svg";
             capacity = 29;
         }else if(storeRequest.getParkingLayoutPath().equals("Stripe")) {
-            layout = "https://parkinglayoutada.s3.us-east-1.amazonaws.com/parking_layout_2.svg";
+            layout = "/parking_layout_svg/parking_layout_2.svg";
             capacity = 24;
         }else{
-            layout= "https://parkinglayoutada.s3.us-east-1.amazonaws.com/parking_layout_3.svg";
+            layout= "/parking_layout_svg/parking_layout_3.svg";
             capacity = 20;
         }
 
@@ -99,7 +99,7 @@ public class StoreService {
     public void deleteStore(Long storeId) {
         Optional<Store> foundStore = storeRepository.findById(storeId);
         foundStore.ifPresent(storeRepository::delete);
-        throw new EntityNotFoundException("A store with this name does not exist");
+//        throw new EntityNotFoundException("A store with this name does not exist");
     }
 
     public StoreModel editStore(Long id, StoreRequest storeRequest) {

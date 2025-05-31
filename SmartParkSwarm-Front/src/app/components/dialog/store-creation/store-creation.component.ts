@@ -59,7 +59,6 @@ export class StoreCreationComponent implements OnInit{
 
   openLayoutDialog() {
     this.layoutSelectionDialog = true;
-    console.log(this.layoutSelectionDialog);
   }
 
   selectLayout(layoutName: string) {

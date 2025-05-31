@@ -123,7 +123,8 @@ class VehicleEntryList(generics.ListCreateAPIView):
             self.perform_create(serializer)
             spot.is_occupied = True
             spot.save()
-            orchestratorservice.send_update_signal()
+            parking_lot = ParkingLot.objects.first()
+            orchestratorservice.send_update_signal(parking_lot.self_id)
             headers = self.get_success_headers(serializer.data)
             return response.Response(serializer.data, status=201, headers=headers)
         else:
@@ -163,7 +164,8 @@ class VehicleExitView(generics.UpdateAPIView):
         spot = entry.spot_uuid
         spot.is_occupied = False
         spot.save()
-        orchestratorservice.send_update_signal()
+        parking_lot = ParkingLot.objects.first()
+        orchestratorservice.send_update_signal(parking_lot.self_id)
 
         return response.Response({'message': 'Vehicle exit registered successfully.'}, status=200)
     

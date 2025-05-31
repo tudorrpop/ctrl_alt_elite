@@ -47,16 +47,12 @@ export class DashboardComponent implements OnInit {
     this.storeService.fetchStores().subscribe({
       next: (response) => {
         this.stores = response;
-        console.log(response);
-
       }
     });
 
     this.userService.fetchUsers().subscribe({
       next: (response) => {
         this.customers = response;
-        console.log(response);
-
       }
     });
   }
