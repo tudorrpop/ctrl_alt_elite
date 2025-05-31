@@ -24,4 +24,5 @@ public class Admin extends User implements Serializable {
         return id;
     }
 
+    public String getUuid() {return null;}
 }

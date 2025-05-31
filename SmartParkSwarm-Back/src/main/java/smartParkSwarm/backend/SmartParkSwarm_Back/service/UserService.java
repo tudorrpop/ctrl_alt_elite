@@ -30,18 +30,21 @@ public class UserService {
     }
 
     public CustomerModel fetchCustomer(Long id) {
-        Customer customer = customerRepository.findCustomerById(id);
-        return new CustomerModel(
-                customer.getId(),
-                customer.getUsername(),
-                customer.getFirstName(),
-                customer.getLastName(),
-                customer.getEmail(),
-                customer.getPhoneNumber(),
-                customer.getMembership(),
-                customer.isActive(),
-                customer.getUuid());
+        return customerRepository.findById(id)
+                .map(customer -> new CustomerModel(
+                        customer.getId(),
+                        customer.getUsername(),
+                        customer.getFirstName(),
+                        customer.getLastName(),
+                        customer.getEmail(),
+                        customer.getPhoneNumber(),
+                        customer.getMembership(),
+                        customer.isActive(),
+                        customer.getUuid()
+                ))
+                .orElse(null);
     }
+
 
     public AdminModel fetchAdmin(Long id) {
         Admin admin = adminRepository.findAdminById(id);
@@ -104,5 +107,31 @@ public class UserService {
         return isParked;
     }
 
+    public CustomerModel updateCustomer(Long id, CustomerModel updatedCustomer) {
+        return customerRepository.findById(id)
+                .map(customer -> {
+                    customer.setUsername(updatedCustomer.username());
+                    customer.setFirstName(updatedCustomer.firstName());
+                    customer.setLastName(updatedCustomer.lastName());
+                    customer.setEmail(updatedCustomer.email());
+                    customer.setPhoneNumber(updatedCustomer.phoneNumber());
+                    customer.setMembership(updatedCustomer.membership());
+                    customer.setActive(updatedCustomer.active());
 
+                    Customer savedCustomer = customerRepository.save(customer);
+
+                    return new CustomerModel(
+                            savedCustomer.getId(),
+                            savedCustomer.getUsername(),
+                            savedCustomer.getFirstName(),
+                            savedCustomer.getLastName(),
+                            savedCustomer.getEmail(),
+                            savedCustomer.getPhoneNumber(),
+                            savedCustomer.getMembership(),
+                            savedCustomer.isActive(),
+                            savedCustomer.getUuid()
+                    );
+                })
+                .orElse(null);
+    }
 }

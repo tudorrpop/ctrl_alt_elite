@@ -1,18 +1,50 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      Manage Account
-    </ion-title>
+    <ion-title>Manage Account</ion-title>
     <ion-buttons slot="end">
       <app-explore-container></app-explore-container>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content *ngIf="currentUser" [fullscreen]="true" class="ion-padding">
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">Manage Account</ion-title>
     </ion-toolbar>
   </ion-header>
+
+  <ion-item>
+    <ion-label position="stacked">Username</ion-label>
+    <ion-input [value]="currentUser.username" disabled></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">Membership</ion-label>
+    <ion-input [value]="currentUser.membership" disabled></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">First Name</ion-label>
+    <ion-input [(ngModel)]="currentUser.firstName" (ionInput)="onInputChange()"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">Last Name</ion-label>
+    <ion-input [(ngModel)]="currentUser.lastName" (ionInput)="onInputChange()"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">Email</ion-label>
+    <ion-input type="email" [(ngModel)]="currentUser.email" (ionInput)="onInputChange()"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">Phone Number</ion-label>
+    <ion-input type="tel" [(ngModel)]="currentUser.phoneNumber" (ionInput)="onInputChange()"></ion-input>
+  </ion-item>
+
+  <ion-button expand="block" class="ion-margin-top" (click)="saveChanges()" *ngIf="isModified">
+    Save Changes
+  </ion-button>
 </ion-content>

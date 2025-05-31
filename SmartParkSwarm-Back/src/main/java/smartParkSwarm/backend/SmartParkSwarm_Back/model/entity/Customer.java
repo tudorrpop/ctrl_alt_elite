@@ -2,6 +2,7 @@ package smartParkSwarm.backend.SmartParkSwarm_Back.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.enums.Role;
 
 import java.io.Serializable;
@@ -14,13 +15,28 @@ public class Customer extends User implements Serializable {
     @Column(nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Setter
+    @Getter
     private String firstName;
+    @Setter
+    @Getter
     private String lastName;
+    @Setter
+    @Getter
     private String email;
+    @Setter
+    @Getter
     private String phoneNumber;
+    @Setter
+    @Getter
     private String membership;
+    @Setter
+    @Getter
     private boolean active;
+    @Setter
+    @Getter
     private boolean parked;
+    @Getter
     private String uuid;
 
     public Customer(String username, String password, Role role) {
@@ -37,64 +53,5 @@ public class Customer extends User implements Serializable {
         return id;
     }
 
-    public boolean isParked() {
-        return parked;
-    }
 
-    public void setParked(boolean parked) {
-        this.parked = parked;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public String getMembership() {
-        return membership;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public void setMembership(String membership) {
-        this.membership = membership;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
 }

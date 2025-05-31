@@ -10,10 +10,11 @@ export const routes: Routes = [
   {
     path: '',
     loadChildren: () => import('./tabs/tabs.routes').then((m) => m.routes),
-    canActivate: [authGuard]
+    canActivate: [authGuard],
+    canMatch: [authGuard]
   },
   {
     path: 'auth',
-    loadComponent: () => import('./auth/auth.page').then( m => m.AuthPage),
+    loadComponent: () => import('./auth/auth.page').then(m => m.AuthPage),
   },
 ];
