@@ -9,10 +9,12 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.entity.Store;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.request.StoreRequest;
+import smartParkSwarm.backend.SmartParkSwarm_Back.model.response.StoreModel;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.response.StoreOverviewModel;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.worker.ParkingLot;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.worker.ParkingSpot;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.worker.VehicleEntry;
+import smartParkSwarm.backend.SmartParkSwarm_Back.repository.StoreRepository;
 
 import java.util.List;
 import java.util.Map;
@@ -26,8 +28,11 @@ public class WorkerService {
 
     private StoreService storeService;
 
-    public WorkerService(WebClient.Builder webClientBuilder, StoreService storeService) {
+    private StoreRepository storeRepository;
+
+    public WorkerService(WebClient.Builder webClientBuilder, StoreService storeService, StoreRepository storeRepository) {
         this.webClient = webClientBuilder.build();
+        this.storeRepository = storeRepository;
         this.storeService = storeService;
     }
 
@@ -54,7 +59,8 @@ public class WorkerService {
         Map<String, Object> requestBody = Map.of(
                 "name", storeRequest.getStoreName(),
                 "location", storeRequest.getStoreAddress(),
-                "capacity", store.getCapacity());
+                "capacity", store.getCapacity(),
+                "self_id", store.getId());
         createData(fullFQDNandPort, "/api/setup", requestBody, ParkingLot.class).block();
         return new StoreOverviewModel(
             store.getId(),
@@ -68,8 +74,11 @@ public class WorkerService {
         return retrieveData(ipaddress, "/api/ParkingLot", ParkingLot.class).block();
     }
 
-    public List<ParkingSpot> fetchAllParkingSpots(String ipaddress) {
-        return retrieveData(ipaddress, "/api/ParkingSpot", new ParameterizedTypeReference<List<ParkingSpot>>() {}).block();
+    public List<ParkingSpot> fetchAllParkingSpots(Long id) {
+
+        Optional<Store> store = storeRepository.findById(id);
+        return store.map(value -> retrieveData(value.getIpAddress(), "/api/ParkingSpot", new ParameterizedTypeReference<List<ParkingSpot>>() {
+        }).block()).orElse(null);
     }
 
     public ParkingSpot fetchParkingSpot(String ipaddress, String parkingSpot) {

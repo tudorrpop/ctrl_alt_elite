@@ -10,6 +10,7 @@ class ParkingLot(models.Model):
     location = models.CharField(max_length=255)
     capacity = models.IntegerField(default=50)
     created_at = models.DateTimeField(auto_now=True)
+    self_id = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name

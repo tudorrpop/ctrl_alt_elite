@@ -9,6 +9,7 @@ import { DividerModule } from 'primeng/divider';
 import { ParkingSpotStatus } from '../../data/model/parking-spot-status.model';
 import { DialogService } from 'primeng/dynamicdialog';
 import { StoreCreationComponent } from '../dialog/store-creation/store-creation.component';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-store',
@@ -28,46 +29,66 @@ export class StoreComponent implements OnInit {
 
   store: StoreModel = {} as StoreModel;
   eventSource!: EventSource;
+  svgContent: string = '';
 
   constructor(
     private storeService: StoreService,
     private route: ActivatedRoute,
     private router: Router,
     private messageService: MessageService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private http: HttpClient
   ) { }
 
-  ngOnInit(): void {
-    this.route.paramMap.subscribe((params) => {
+ngOnInit(): void {
+  this.route.paramMap.subscribe((params) => {
+    const storeId = params.get('storeId');
+    if (storeId) {
+      this.storeService.fetchStore(+storeId).subscribe({
+        next: (storeModel) => {
+          this.store = storeModel;
 
-      const storeId = params.get('storeId');
-      if (storeId) {
-        this.storeService.fetchStore(+storeId).subscribe({
-          next: (storeModel) => {
-            this.store = storeModel;
-            this.storeService.initialParkingLotStatus().subscribe({
-              next: (statuses) => {
-                this.updateParkingSpotColors(statuses);
+          this.http.get(storeModel.parkingLayoutPath.toString(), { responseType: 'text' }).subscribe({
+            next: (svg) => {
+              const container = document.getElementById('svg-container');
+              if (container) {
+                container.innerHTML = svg;
+
+                console.log(this.store.storeId);
+                this.storeService.initialParkingLotStatus(this.store.storeId).subscribe({
+                  next: (statuses) => {
+                    this.updateParkingSpotColors(statuses);
+                  }
+                });
+
+                
+                this.eventSource = new EventSource('http://localhost:8083/sse');
+                this.eventSource.addEventListener('message', (event: MessageEvent) => {
+                  this.updateParkingSpotColors(JSON.parse(event.data));
+                });
               }
-            });
-          },
+            },
+            error: () => {
+              console.error('Failed to load SVG');
+            }
+          });
+        },
+        error: () => {
+          this.messageService.add({
+            severity: 'warn',
+            summary: 'Oops! Something went wrong.',
+            detail: 'Unable to open the store page.',
+          });
+          this.router.navigate(['/dashboard']);
+        }
+      });
+    }
+  });
 
-          error: () => {
-            this.messageService.add({
-              severity: 'warn',
-              summary: 'Oops! Something went wrong.',
-              detail: 'Unable to open the store page.',
-            });
-            this.router.navigate(['/dashboard']);
-          }
-        });
-      }
-    });
 
     // ParkinLot UPDATES
     this.eventSource = new EventSource('http://localhost:8083/sse');
     this.eventSource.addEventListener('message', (event: MessageEvent) => {
-      console.log(JSON.parse(event.data));
       this.updateParkingSpotColors(JSON.parse(event.data));
     });
 

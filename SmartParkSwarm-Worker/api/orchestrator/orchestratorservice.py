@@ -19,7 +19,7 @@ def scan_qr_on_exit(qr_code):
     res = requests.post(api_url)
     return res.json()
 
-def send_update_signal():
+def send_update_signal(id):
     base_url = get_orchestrator_base_url()
-    api_url = f"{base_url}/worker/update"
+    api_url = f"{base_url}/worker/update?id={id}"
     res = requests.put(api_url)

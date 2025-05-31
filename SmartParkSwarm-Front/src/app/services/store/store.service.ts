@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { Observable } from 'rxjs';
@@ -61,11 +61,15 @@ export class StoreService {
     );
   }
 
-  public initialParkingLotStatus(): Observable<ParkingSpotStatus[]> {
+  public initialParkingLotStatus(id: number): Observable<ParkingSpotStatus[]> {
     const headers = this.getAuthHeaders();
+    console.log(id);
 
+    // const params = new HttpParams().set('id', id);
+    
     return this.httpClient.put<ParkingSpotStatus[]>(
-      `${this.baseUrl}/worker/update`,
+      `${this.baseUrl}/worker/update?id=${id}`,
+    
       { headers, withCredentials: true }
     );
   }

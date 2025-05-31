@@ -22,6 +22,7 @@ public class WorkersController {
     @Autowired
     private WorkerService workerService;
 
+
     @Autowired
     private SseController sseController;
 
@@ -45,11 +46,12 @@ public class WorkersController {
     }
 
     @PutMapping("/worker/update")
-    public ResponseEntity<List<ParkingSpotStatus>> updateParkingLot() {
-        List<ParkingSpot> list = workerService.fetchAllParkingSpots("127.0.0.1:8000");
+    public ResponseEntity<List<ParkingSpotStatus>> updateParkingLot(@RequestParam Integer id) {
+        Long idL = id.longValue();
+        List<ParkingSpot> list = workerService.fetchAllParkingSpots(idL);
         List<ParkingSpotStatus> test = list.stream().map(spot ->
                 new ParkingSpotStatus(
-                        "P" + spot.getSpot_number(),
+                        spot.getSpot_number(),
                         spot.is_occupied())).toList();
 
         sseController.broadcast(test);
