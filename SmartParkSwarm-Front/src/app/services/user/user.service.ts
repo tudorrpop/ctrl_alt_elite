@@ -29,4 +29,14 @@ export class UserService {
         { headers, withCredentials: true }
       );
     }
+
+    public fetchCustomer(id: number): Observable<CustomerModel> {
+      console.log(id);
+      const headers = this.getAuthHeaders();    
+      
+      return this.httpClient.get<CustomerModel>(
+        `${this.baseUrl}/customer/user/${id}`, 
+        { headers, withCredentials: true }
+      );
+    }
 }

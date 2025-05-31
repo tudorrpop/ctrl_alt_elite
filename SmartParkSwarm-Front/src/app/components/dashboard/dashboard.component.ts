@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavbarComponent } from '../shared/navbar/navbar.component';
 import { StoreService } from '../../services/store/store.service';
 import { TabsModule } from 'primeng/tabs';
@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 import { CustomerModel } from '../../data/model/customer.model';
 import { UserService } from '../../services/user/user.service';
 import { GoogleMapsModule } from '@angular/google-maps';
+import { CustomerInfoComponent } from '../dialog/customer-info/customer-info.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -126,6 +127,21 @@ export class DashboardComponent implements OnInit{
         });
       }
     });
+  }
+  
+  public showUserInfo(id: number): void {
+    this.userService.fetchCustomer(id).subscribe({
+    next: (response) => {
+      const user = response;
+
+      this.dialogService.open(CustomerInfoComponent, {
+        data: { user: user },
+        header: 'User Information',
+        modal: true,
+        closable: true
+      });
+      }
+     });
   }
 
 }

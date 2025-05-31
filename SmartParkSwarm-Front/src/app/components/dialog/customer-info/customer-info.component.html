@@ -1,0 +1,34 @@
+<div class="dialog">
+
+  <div class="field">
+    <label>Name:</label>
+    <div class="value">{{ user.firstName }} {{ user.lastName }}</div>
+  </div>
+
+  <div class="field">
+    <label>Username:</label>
+    <div class="value">{{ user.username }}</div>
+  </div>
+
+  <div class="field">
+    <label>Email:</label>
+    <div class="value">{{ user.email }}</div>
+  </div>
+
+  <div class="field">
+    <label>Phone Nr:</label>
+    <div class="value">{{ user.phoneNumber }}</div>
+  </div>
+
+  <div class="field">
+    <label>Membership:</label>
+    <div class="value">{{ user.membership }}</div>
+  </div>
+
+  <div class="field">
+    <label>Status:</label>
+    <div class="value" [class.active]="user.active" [class.inactive]="!user.active">
+      {{ user.active ? 'Active' : 'Inactive' }}
+    </div>
+  </div>
+</div>
