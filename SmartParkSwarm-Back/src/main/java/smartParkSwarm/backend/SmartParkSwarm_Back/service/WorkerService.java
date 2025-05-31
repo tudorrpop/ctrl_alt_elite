@@ -1,21 +1,34 @@
 package smartParkSwarm.backend.SmartParkSwarm_Back.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.entity.Store;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.request.StoreRequest;
-import smartParkSwarm.backend.SmartParkSwarm_Back.model.response.StoreModel;
-import smartParkSwarm.backend.SmartParkSwarm_Back.model.response.StoreOverviewModel;
+import smartParkSwarm.backend.SmartParkSwarm_Back.model.response.*;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.worker.ParkingLot;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.worker.ParkingSpot;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.worker.VehicleEntry;
 import smartParkSwarm.backend.SmartParkSwarm_Back.repository.StoreRepository;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -125,5 +138,99 @@ public class WorkerService {
                 .uri("http://" + ipaddress + endpoint)
                 .retrieve()
                 .bodyToMono(typeRef);
+    }
+
+
+    public List<SpotInfo> returnFreeSpotsJsonThreeDays(Long id) throws IOException {
+        Store store = storeRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Store not found"));
+
+        String ipAddress = store.getIpAddress();
+        String endpoint = "/api/metrics/free-spots-3-days";
+        String url = ipAddress + endpoint;
+
+        String jsonString = retrieveData(url);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        return objectMapper.readValue(jsonString, new TypeReference<List<SpotInfo>>(){});
+    }
+
+    private String retrieveData(String url) {
+        return webClient
+                .get()
+                .uri("http://"+url)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block(); // Blocking call; safe in non-reactive apps
+    }
+
+    public List<SpotInfo> returnFreeSpotsJsonToday(Long id) throws JsonProcessingException {
+
+        Store store = storeRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Store not found"));
+
+        String ipAddress = store.getIpAddress();
+        String endpoint = "/api/metrics/free-spots-today";
+        String url = ipAddress + endpoint;
+
+        // Call the Python service
+
+        String jsonString = retrieveData(url);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        return objectMapper.readValue(jsonString, new TypeReference<List<SpotInfo>>(){});
+    }
+
+    public List<WeekdayOcuppancy> returnFreeSpotsJsonOccupancyWeekday(Long id) throws JsonProcessingException {
+
+        Store store = storeRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Store not found"));
+
+        String ipAddress = store.getIpAddress();
+        String endpoint = "/api/metrics/occupancy-by-weekday";
+        String url = ipAddress + endpoint;
+
+        String jsonString = retrieveData(url);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        return objectMapper.readValue(jsonString, new TypeReference<List<WeekdayOcuppancy>>(){});
+    }
+
+    public List<MonthOcuppancy> returnFreeSpotsJsonOccupancyMonth(Long id) throws JsonProcessingException {
+
+        Store store = storeRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Store not found"));
+
+        String ipAddress = store.getIpAddress();
+        String endpoint = "/api/metrics/occupancy-by-month";
+        String url = ipAddress + endpoint;
+
+        String jsonString = retrieveData(url);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        return objectMapper.readValue(jsonString, new TypeReference<List<MonthOcuppancy>>(){});
+
+    }
+
+    public List<MonthDayOcuppancy> returnFreeSpotsJsonOccupancyMonthDay(Long id) throws JsonProcessingException {
+
+        Store store = storeRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Store not found"));
+
+        String ipAddress = store.getIpAddress();
+        String endpoint = "/api/metrics/occupancy-by-month-day";
+        String url = ipAddress + endpoint;
+
+        // Call the Python service
+
+        String jsonString = retrieveData(url);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        return objectMapper.readValue(jsonString, new TypeReference<List<MonthDayOcuppancy>>(){});
     }
 }
