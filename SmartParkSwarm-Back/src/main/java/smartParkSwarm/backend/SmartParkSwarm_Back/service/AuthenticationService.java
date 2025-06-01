@@ -48,7 +48,8 @@ public class AuthenticationService {
                 user.getId(),
                 user.getUsername(),
                 user.getRole().toString(),
-                jwtUtil.generateToken(request.getUsername(), request.getRole())
+                jwtUtil.generateToken(request.getUsername(), request.getRole()),
+                user.getUuid()
         );
     }
 
@@ -69,7 +70,8 @@ public class AuthenticationService {
                 user.get().getId(),
                 user.get().getUsername(),
                 user.get().getRole().toString(),
-                jwtUtil.generateToken(user.get().getUsername(), user.get().getRole())
+                jwtUtil.generateToken(user.get().getUsername(), user.get().getRole()),
+                user.get().getUuid()
         );
     }
 }

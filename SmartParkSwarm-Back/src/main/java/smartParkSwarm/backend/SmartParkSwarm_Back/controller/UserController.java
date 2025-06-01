@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.*;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.response.AdminModel;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.response.CustomerModel;
 import smartParkSwarm.backend.SmartParkSwarm_Back.service.UserService;
-
 import java.util.List;
 
+@CrossOrigin(origins = {"http://localhost:8100", "http://192.168.1.128:8100"})
 @RestController
 public class UserController {
 
@@ -34,5 +34,11 @@ public class UserController {
     public ResponseEntity<CustomerModel> fetchCustomer(@PathVariable Long id){
         CustomerModel user = userService.fetchCustomer(id);
         return ResponseEntity.ok(user);
+    }
+
+    @PutMapping("customer/user/{id}")
+    public ResponseEntity<CustomerModel> updateCustomer(@PathVariable Long id, @RequestBody CustomerModel updatedCustomer){
+        CustomerModel customer = userService.updateCustomer(id, updatedCustomer);
+        return ResponseEntity.ok(customer);
     }
 }

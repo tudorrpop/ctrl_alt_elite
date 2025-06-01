@@ -14,7 +14,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 @RestController
 @RequestMapping("/sse")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = {"http://localhost:8100", "http://192.168.1.128:8100"})
 public class SseController {
 
     private final List<SseEmitter> emitters = new CopyOnWriteArrayList<>();

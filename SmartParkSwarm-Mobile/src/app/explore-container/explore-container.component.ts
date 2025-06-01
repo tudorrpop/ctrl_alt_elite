@@ -16,9 +16,11 @@ export class ExploreContainerComponent {
     addIcons({ logOutOutline });
   }
 
-  logout() {
+  logout(): void {
     this.authService.logout();
-    this.router.navigate(['/login']);
+    this.router.navigateByUrl('/auth', { replaceUrl: true }).then(() => {
+      console.log('Logged out and navigated to /auth');
+    });
   }
 
 }
