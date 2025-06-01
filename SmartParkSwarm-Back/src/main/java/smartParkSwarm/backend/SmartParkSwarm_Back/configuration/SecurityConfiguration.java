@@ -31,7 +31,7 @@ public class SecurityConfiguration {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/register", "/login", "/sse", "/worker/**", "/stores/**", "customer/**", "admin/**").permitAll()
+                        .requestMatchers("/register", "/login", "/sse", "/worker/**", "/stores/**", "customer/**",  "admin/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exception -> exception

@@ -11,15 +11,7 @@
     <ion-input type="password" [(ngModel)]="authData.password"></ion-input>
   </ion-item>
 
-<!--  <ion-item>-->
-<!--    <ion-label>Role</ion-label>-->
-<!--    <ion-select [(ngModel)]="authData.role">-->
-<!--      <ion-select-option value="CUSTOMER">Customer</ion-select-option>-->
-<!--      <ion-select-option value="ADMIN">Admin</ion-select-option>-->
-<!--    </ion-select>-->
-<!--  </ion-item>-->
-
-  <ion-button expand="block" (click)="submit()">
+  <ion-button expand="block" (click)="submit()" class="ion-margin-top">
     {{ isLogin ? 'Login' : 'Register' }}
   </ion-button>
 

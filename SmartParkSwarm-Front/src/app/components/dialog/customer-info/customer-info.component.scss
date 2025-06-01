@@ -1,0 +1,53 @@
+.dialog {
+  display: flex;
+  flex-direction: column;
+
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  width: 700px;
+  margin: 0 auto;
+}
+
+.dialog-header {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-size: 16px;
+  color: #555;
+  font-weight: 600;
+}
+
+.value {
+  font-size: 14px;
+  padding: 10px;
+  border-radius: 4px;
+  background-color: #f8f9fa;
+  border: 1px solid #ccc;
+  color: #333;
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+}
+
+.value.active {
+  color: #22c55e; /* green */
+  font-weight: 700;
+  border-color: #a7f3d0;
+  background-color: #dcfce7;
+}
+
+.value.inactive {
+  color: #ef4444; /* red */
+  font-weight: 700;
+  border-color: #fecaca;
+  background-color: #fee2e2;
+}
