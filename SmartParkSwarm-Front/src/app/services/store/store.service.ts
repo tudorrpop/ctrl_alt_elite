@@ -6,13 +6,14 @@ import { StoreOverviewModel } from '../../data/model/store-overview.model';
 import { StoreRequest } from '../../data/request/store.request';
 import { StoreModel } from '../../data/model/store.model';
 import { ParkingSpotStatus } from '../../data/model/parking-spot-status.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StoreService {
 
-  private baseUrl = "http://localhost:8083";
+  private baseUrl = environment.apiUrl;
 
   constructor(
     private httpClient: HttpClient,
@@ -66,10 +67,10 @@ export class StoreService {
     console.log(id);
 
     // const params = new HttpParams().set('id', id);
-    
+
     return this.httpClient.put<ParkingSpotStatus[]>(
       `${this.baseUrl}/worker/update?id=${id}`,
-    
+
       { headers, withCredentials: true }
     );
   }
