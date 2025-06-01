@@ -71,16 +71,20 @@
                 [(ngModel)]="selectedCity"
                 optionLabel="name"
                 placeholder="Report Type"
-                [showClear]="true"
-                [filter]="true"
-                icon="pi pi-trash"
-                iconPos="pi-arrow-circle-left">
+                [showClear]="true">
               </p-dropdown>
-              <p-button label="Retrieve" variant="outlined" severity="success" />
+              <button pButton class="p-button-outlined" label="Retrieve" icon="pi pi-cog" iconPos="right" severity="success" (click)="fetchReport()"></button>
             </div>
 
             <div class="stats-content">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit nulla iste ipsa eius commodi cupiditate inventore eaque amet, aut pariatur nemo ea iusto aliquid blanditiis et dicta ducimus suscipit. Esse!
+              <div class="chart">
+                <p-chart
+                    type="line"
+                    [data]="data"
+                    [options]="options"
+                    style="flex: 1;"
+                />
+              </div>
             </div>
           </div>
         </p-tabpanel>
