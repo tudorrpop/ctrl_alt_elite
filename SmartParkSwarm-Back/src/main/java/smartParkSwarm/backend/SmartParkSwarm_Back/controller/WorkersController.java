@@ -95,5 +95,10 @@ public class WorkersController {
         return ResponseEntity.ok(workerService.returnFreeSpotsJsonOccupancyMonthDay(id));
     }
 
+    @GetMapping(value = "/worker/statistics/overall", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<MonthStatisticsOcuppancy>> getMonthlyStoreStatistics() throws Exception {
+        return ResponseEntity.ok(workerService.returnMonthlyStatistics());
+    }
+
 
 }

@@ -28,10 +28,7 @@ import smartParkSwarm.backend.SmartParkSwarm_Back.repository.StoreRepository;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
@@ -90,8 +87,7 @@ public class WorkerService {
     public List<ParkingSpot> fetchAllParkingSpots(Long id) {
 
         Optional<Store> store = storeRepository.findById(id);
-        return store.map(value -> retrieveData(value.getIpAddress(), "/api/ParkingSpot", new ParameterizedTypeReference<List<ParkingSpot>>() {
-        }).block()).orElse(null);
+        return store.map(value -> retrieveData(value.getIpAddress(), "/api/ParkingSpot", new ParameterizedTypeReference<List<ParkingSpot>>() {}).block()).orElse(Collections.emptyList());
     }
 
     public ParkingSpot fetchParkingSpot(String ipaddress, String parkingSpot) {
@@ -232,5 +228,38 @@ public class WorkerService {
         ObjectMapper objectMapper = new ObjectMapper();
 
         return objectMapper.readValue(jsonString, new TypeReference<List<MonthDayOcuppancy>>(){});
+    }
+
+    public List<MonthStatisticsOcuppancy> returnMonthlyStatistics() {
+        List<MonthStatisticsOcuppancy> result = new ArrayList<>();
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<Store> stores = storeRepository.findAll();
+        for(Store store : stores) {
+            String ipAddress = store.getIpAddress();
+            String endpoint = "/api/metrics/occupancy-by-month";
+            String url = ipAddress + endpoint;
+
+            try {
+                String json = retrieveData(url); // returns JSON string
+
+                // Deserialize JSON array
+                List<MonthStatisticsOcuppancy> monthlyData = objectMapper.readValue(
+                        json,
+                        new TypeReference<List<MonthStatisticsOcuppancy>>() {}
+                );
+
+                for (MonthStatisticsOcuppancy entry : monthlyData) {
+                    result.add(new MonthStatisticsOcuppancy(
+                            store.getStoreName(),
+                            entry.getMonth_name(),
+                            entry.getOccupancy_percent()
+                    ));
+                }
+
+            } catch (Exception e) {
+                System.err.println("Error fetching stats from " + store.getStoreName() + ": " + e.getMessage());
+            }
+        }
+        return result;
     }
 }
