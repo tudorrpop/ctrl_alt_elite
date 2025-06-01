@@ -10,8 +10,19 @@ import { ParkingSpotStatus } from '../../data/model/parking-spot-status.model';
 import { DialogService } from 'primeng/dynamicdialog';
 import { StoreCreationComponent } from '../dialog/store-creation/store-creation.component';
 import { HttpClient } from '@angular/common/http';
+import { TabsModule } from 'primeng/tabs';
+import { SelectModule} from 'primeng/select';
+import { FormsModule } from '@angular/forms';
+import { DropdownModule } from 'primeng/dropdown';
+import { ChartModule } from 'primeng/chart';
+import { StatsService } from '../../services/stats/stats.service';
+import { SpotInfo } from '../../data/statistics/spot-info.model';
 import { environment } from '../../../environments/environment';
 
+interface Report {
+    name: string;
+    type: string;
+}
 
 @Component({
   selector: 'app-store',
@@ -19,7 +30,12 @@ import { environment } from '../../../environments/environment';
   imports: [
     NavbarComponent,
     ButtonModule,
-    DividerModule
+    DividerModule,
+    TabsModule,
+    SelectModule,
+    FormsModule,
+    DropdownModule,
+    ChartModule
   ],
   providers: [
     DialogService
@@ -27,12 +43,26 @@ import { environment } from '../../../environments/environment';
   templateUrl: './store.component.html',
   styleUrl: './store.component.scss'
 })
+
 export class StoreComponent implements OnInit {
 
   apiUrl = environment.apiUrl;
   store: StoreModel = {} as StoreModel;
   eventSource!: EventSource;
   svgContent: string = '';
+  
+  data: any;
+  options: any;
+
+  cities: Report[] | undefined = [
+    { name: 'Free Spots - Last 3 days', type: 'last-3-days' },
+    { name: 'Free Spots - Today', type: 'today' },
+    { name: 'Occupancy by months', type: 'by-months' },
+    { name: 'Occupancy by days', type: 'by-days' },
+    { name: 'Occupancy by week', type: 'by-week' }
+  ];
+
+  selectedCity: Report | undefined;
 
   constructor(
     private storeService: StoreService,
@@ -40,7 +70,8 @@ export class StoreComponent implements OnInit {
     private router: Router,
     private messageService: MessageService,
     private dialogService: DialogService,
-    private http: HttpClient
+    private http: HttpClient,
+    private statsService: StatsService
   ) { }
 
   ngOnInit(): void {
@@ -74,20 +105,23 @@ export class StoreComponent implements OnInit {
               error: () => {
                 console.error('Failed to load SVG');
               }
-            });
-          },
-          error: () => {
-            this.messageService.add({
-              severity: 'warn',
-              summary: 'Oops! Something went wrong.',
-              detail: 'Unable to open the store page.',
-            });
-            this.router.navigate(['/dashboard']);
-          }
-        });
-      }
-    });
-
+            },
+            error: () => {
+              console.error('Failed to load SVG');
+            }
+          });
+        },
+        error: () => {
+          this.messageService.add({
+            severity: 'warn',
+            summary: 'Oops! Something went wrong.',
+            detail: 'Unable to open the store page.',
+          });
+          this.router.navigate(['/dashboard']);
+        }
+      });
+    }
+  });
 
     // ParkinLot UPDATES
     this.eventSource = new EventSource(`${this.apiUrl}/sse`);
@@ -148,5 +182,62 @@ export class StoreComponent implements OnInit {
     });
   }
 
+  public fetchReport(): void {
+  switch (this.selectedCity?.type) {
+    case 'last-3-days':
+      this.statsService.fetchLastThreeDays(this.store.storeId).subscribe({
+        next: (response) => {
+          const chart = this.statsService.prepareSpotChartData(response);
+          this.data = chart.data;
+          this.options = chart.options;
+        }
+      });
+      break;
+
+    case 'today':
+      this.statsService.fetchToday(this.store.storeId).subscribe({
+        next: (response) => {
+          const chart = this.statsService.prepareSpotChartData(response);
+          this.data = chart.data;
+          this.options = chart.options;
+        }
+      });
+    break;
+
+    case 'by-months':
+      this.statsService.fetchByMonths(this.store.storeId).subscribe({
+        next: (response) => {
+          const chart = this.statsService.prepareMonthlyOccupancyChartData(response);
+          this.data = chart.data;
+          this.options = chart.options;
+        }
+      });
+    break;
+
+    case 'by-days':
+      this.statsService.fetchByDays(this.store.storeId).subscribe({
+        next: (response) => {
+          const chart = this.statsService.prepareDailyOccupancyChartData(response);
+          this.data = chart.data;
+          this.options = chart.options;
+        }
+      });
+    break;
+
+    case 'by-week':
+      this.statsService.fetchByWeek(this.store.storeId).subscribe({
+        next: (response) => {
+          const chart = this.statsService.prepareWeekdayOccupancyChartData(response);
+          this.data = chart.data;
+          this.options = chart.options;
+        }
+      });
+    break;
+
+    default:
+      console.warn('Unknown report type:', this.selectedCity?.type);
+      break;
+  }
+  }
 
 }

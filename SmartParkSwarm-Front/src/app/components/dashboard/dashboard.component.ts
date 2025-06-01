@@ -14,6 +14,9 @@ import { CustomerModel } from '../../data/model/customer.model';
 import { UserService } from '../../services/user/user.service';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { CustomerInfoComponent } from '../dialog/customer-info/customer-info.component';
+import { StatsService } from '../../services/stats/stats.service';
+import { MonthStatisticsOcuppancy } from '../../data/statistics/overall-stats.model';
+import { ChartModule } from 'primeng/chart';
 
 @Component({
   selector: 'app-dashboard',
@@ -24,7 +27,8 @@ import { CustomerInfoComponent } from '../dialog/customer-info/customer-info.com
     TabsModule,
     ButtonModule,
     DynamicDialogModule,
-    GoogleMapsModule
+    GoogleMapsModule,
+    ChartModule
   ],
   providers: [
     DialogService
@@ -37,6 +41,11 @@ export class DashboardComponent implements OnInit{
 
   stores!: StoreOverviewModel[];
   customers!: CustomerModel[];
+  stats!: MonthStatisticsOcuppancy[]; 
+
+  data: any;
+  options: any;
+
   
   mapCenter: google.maps.LatLngLiteral = { lat: 45.7540, lng: 21.2275 }; 
   zoom = 12;
@@ -69,7 +78,8 @@ export class DashboardComponent implements OnInit{
     private storeService: StoreService,
     private userService: UserService,
     private dialogService: DialogService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private statsService: StatsService
   ) { 
   }
 
@@ -83,6 +93,13 @@ export class DashboardComponent implements OnInit{
   this.userService.fetchUsers().subscribe({
     next: (response) => {
       this.customers = response;
+    }
+  });
+
+  this.statsService.fetchOverallStats().subscribe({
+    next: (response) => {
+      this.stats = response;
+      this.prepareChartData(this.stats);
     }
   });
 }
@@ -143,5 +160,39 @@ export class DashboardComponent implements OnInit{
       }
      });
   }
+
+  prepareChartData(stats: MonthStatisticsOcuppancy[]) {
+    const months = [...new Set(stats.map(stat => stat.month_name))];
+    const stores = [...new Set(stats.map(stat => stat.store))];
+
+    this.data = {
+        labels: months,
+        datasets: stores.map((store, index) => {
+            return {
+                label: store,
+                data: months.map(month => {
+                    const match = stats.find(stat => stat.store === store && stat.month_name === month);
+                    return match ? match.occupancy_percent : 0;
+                }),
+                backgroundColor: this.getColor(index),
+                borderColor: this.getColor(index)
+            };
+        })
+    };
+}
+
+getColor(index: number): string {
+    const colors = [
+        '#06b6d4', // cyan
+        '#9ca3af', // gray
+        '#10b981', // green
+        '#f59e0b', // amber
+        '#ef4444', // red
+        '#8b5cf6', // violet
+    ];
+    return colors[index % colors.length];
+}
+
+
 
 }

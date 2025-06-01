@@ -71,13 +71,13 @@ public class WorkersController {
     }
 
     @GetMapping(value = "/worker/metrics/threedays", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<SpotInfo>> getFreeSpotsJsonThreeDays(@RequestParam Long id) throws Exception {
-        return ResponseEntity.ok(workerService.returnFreeSpotsJsonThreeDays(id));
+    public ResponseEntity<List<SpotInfo>> getFreeSpotsJsonThreeDays(@RequestParam String id) throws Exception {
+        return ResponseEntity.ok(workerService.returnFreeSpotsJsonThreeDays(Long.parseLong(id)));
     }
 
     @GetMapping(value = "/worker/metrics/today", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<SpotInfo>> getFreeSpotsJsonToday(@RequestParam Long id) throws Exception {
-        return ResponseEntity.ok(workerService.returnFreeSpotsJsonToday(id));
+    public ResponseEntity<List<SpotInfo>> getFreeSpotsJsonToday(@RequestParam String id) throws Exception {
+        return ResponseEntity.ok(workerService.returnFreeSpotsJsonToday(Long.parseLong(id)));
     }
 
     @GetMapping(value = "/worker/metrics/occupancyweekday", produces = MediaType.APPLICATION_JSON_VALUE)

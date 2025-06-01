@@ -43,17 +43,55 @@
       </div>
     </div>
 
-    <div class="store-content">
-      <div class="parking-layout">
-        <div id="svg-container"></div>
-      </div>
+    <div class="tabs">
+      <p-tabs value="0">
+        <p-tablist>
+            <p-tab value="0">
+                <i class="pi pi-objects-column"></i>
+                <span class="font-bold whitespace-nowrap">Parking Occupancy</span>
+            </p-tab>
+            <p-tab value="1">
+                <i class="pi pi-chart-bar"></i>
+                <span class="font-bold whitespace-nowrap">Stats</span>
+            </p-tab>
+        </p-tablist>
 
-      <!-- <p-divider layout="vertical" />
+      <p-tabpanels>
+          <p-tabpanel value="0">
+          <div class="parking-layout">
+            <div id="svg-container"></div>
+        </div>
+      </p-tabpanel>
 
-            <div class="store-data">
-                <p>Capacity: 90%</p>
-                <p>Parking lots: 100</p>
-            </div> -->
+        <p-tabpanel value="1">   
+          <div class="stats">
+            <div class="stats-buttons">
+              <p-dropdown
+                [options]="cities"
+                [(ngModel)]="selectedCity"
+                optionLabel="name"
+                placeholder="Report Type"
+                [showClear]="true">
+              </p-dropdown>
+              <button pButton class="p-button-outlined" label="Retrieve" icon="pi pi-cog" iconPos="right" severity="success" (click)="fetchReport()"></button>
+            </div>
+
+            <div class="stats-content">
+              <div class="chart">
+                <p-chart
+                    type="line"
+                    [data]="data"
+                    [options]="options"
+                    style="flex: 1;"
+                />
+              </div>
+            </div>
+          </div>
+        </p-tabpanel>
+
+      </p-tabpanels>
+    </p-tabs>
+  
     </div>
   </div>
 </div>

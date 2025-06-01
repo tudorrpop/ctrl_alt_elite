@@ -1,47 +1,74 @@
-
-.app-container{
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-
-    background-color: white;
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: white;
 }
 
-.content{
-    flex: 1 0 0;
-    display: flex;
-    flex-direction: column;
-    padding: 50px;
+.content {
+  flex: 1 0 0;
+  display: flex;
+  flex-direction: column;
+  padding: 50px;
+  overflow: hidden;
 }
 
 .submenu {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    padding-bottom: 50px;
-}
-
-.store-info {
-    display: flex;
-    flex-direction: column;
-    flex: 1 0 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 20px;
 }
 
 .buttons {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px; 
 }
 
-.store-content{
-    flex: 1 0 0;
-    display: flex;
-    justify-content: space-around;
+.tabs {
+  flex: 1 0 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
+
+
+::ng-deep p-tabpanels {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+
+::ng-deep p-tabpanel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
 
 .parking-layout {
-    display: flex;
-    flex: 1 0 0;
-    justify-content: start;
-    // background-color: #4c4c4c;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+
+#svg-container {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  background: #f8f8f8; 
+}
+
+.stats{
+    height: 700px;
+}
+
+.retrieve {
+  padding: 500px;
 }

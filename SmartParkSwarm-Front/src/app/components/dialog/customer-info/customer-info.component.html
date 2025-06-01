@@ -26,6 +26,11 @@
   </div>
 
   <div class="field">
+    <label>QR Code:</label>
+    <div class="value">{{ user.uuid }}</div>
+  </div>
+
+  <div class="field">
     <label>Status:</label>
     <div class="value" [class.active]="user.active" [class.inactive]="!user.active">
       {{ user.active ? 'Active' : 'Inactive' }}

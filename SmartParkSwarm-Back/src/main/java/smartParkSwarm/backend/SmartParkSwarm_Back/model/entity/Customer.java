@@ -112,7 +112,7 @@ public class Customer extends User implements Serializable {
 
     @Override
     public String getUuid() {
-        return "";
+        return uuid;
     }
 
 
