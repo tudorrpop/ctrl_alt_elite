@@ -10,6 +10,8 @@ import { ParkingSpotStatus } from '../../data/model/parking-spot-status.model';
 import { DialogService } from 'primeng/dynamicdialog';
 import { StoreCreationComponent } from '../dialog/store-creation/store-creation.component';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
+
 
 @Component({
   selector: 'app-store',
@@ -27,6 +29,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class StoreComponent implements OnInit {
 
+  apiUrl = environment.apiUrl;
   store: StoreModel = {} as StoreModel;
   eventSource!: EventSource;
   svgContent: string = '';
@@ -62,7 +65,7 @@ export class StoreComponent implements OnInit {
                   });
 
 
-                  this.eventSource = new EventSource('http://localhost:8083/sse');
+                  this.eventSource = new EventSource(`${this.apiUrl}/sse`);
                   this.eventSource.addEventListener('message', (event: MessageEvent) => {
                     this.updateParkingSpotColors(JSON.parse(event.data));
                   });
@@ -87,7 +90,7 @@ export class StoreComponent implements OnInit {
 
 
     // ParkinLot UPDATES
-    this.eventSource = new EventSource('http://localhost:8083/sse');
+    this.eventSource = new EventSource(`${this.apiUrl}/sse`);
     this.eventSource.addEventListener('message', (event: MessageEvent) => {
       this.updateParkingSpotColors(JSON.parse(event.data));
     });

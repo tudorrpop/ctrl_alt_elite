@@ -15,28 +15,21 @@ public class Customer extends User implements Serializable {
     @Column(nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Setter
-    @Getter
+
     private String firstName;
-    @Setter
-    @Getter
+
     private String lastName;
-    @Setter
-    @Getter
+
     private String email;
-    @Setter
-    @Getter
+
     private String phoneNumber;
-    @Setter
-    @Getter
+
     private String membership;
-    @Setter
-    @Getter
+
     private boolean active;
-    @Setter
-    @Getter
+
     private boolean parked;
-    @Getter
+
     private String uuid;
 
     public Customer(String username, String password, Role role) {
@@ -51,6 +44,75 @@ public class Customer extends User implements Serializable {
     @Override
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getMembership() {
+        return membership;
+    }
+
+    public void setMembership(String membership) {
+        this.membership = membership;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public boolean isParked() {
+        return parked;
+    }
+
+    public void setParked(boolean parked) {
+        this.parked = parked;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    @Override
+    public String getUuid() {
+        return "";
     }
 
 
