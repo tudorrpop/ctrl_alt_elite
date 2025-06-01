@@ -3,18 +3,11 @@ package smartParkSwarm.backend.SmartParkSwarm_Back.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.entity.Store;
@@ -25,9 +18,7 @@ import smartParkSwarm.backend.SmartParkSwarm_Back.model.worker.ParkingSpot;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.worker.VehicleEntry;
 import smartParkSwarm.backend.SmartParkSwarm_Back.repository.StoreRepository;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.StringReader;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -56,12 +47,12 @@ public class WorkerService {
                 "exposedPort",port,
                 "containerName", storeRequest.getStoreName().toLowerCase() + "container"
         );
-        String storeFQDN = callAzureFunction("createworkers.azurewebsites.net", "/api/containerapp_creator", requestBodyAzureFunction, String.class).block() + ":8000";
+        //String storeFQDN = callAzureFunction("createworkers.azurewebsites.net", "/api/containerapp_creator", requestBodyAzureFunction, String.class).block() + ":8000";
         // String fullFQDNandPort = storeFQDN.substring(0, storeFQDN.length() - 5)+ ":"+ port;
-        String fullFQDNandPort = storeRequest.getStoreName().toLowerCase() + ":" + port;
+        //String fullFQDNandPort = storeRequest.getStoreName().toLowerCase() + ":" + port;
 
         //this is used to create a worker locally. to to be set back to azure function later
-        // String  fullFQDNandPort = "127.0.0.1:8000";
+         String  fullFQDNandPort = "127.0.0.1:8000";
 
         Thread.sleep(45000);
 
@@ -153,7 +144,7 @@ public class WorkerService {
         return objectMapper.readValue(jsonString, new TypeReference<List<SpotInfo>>(){});
     }
 
-    private String retrieveData(String url) {
+    public String retrieveData(String url) {
         return webClient
                 .get()
                 .uri("http://"+url)
@@ -262,5 +253,49 @@ public class WorkerService {
             }
         }
         return result;
+    }
+
+    public String getAnswer() throws Exception {
+
+
+        List<Store> stores = storeRepository.findAll();
+        StringBuilder csvBuilder = new StringBuilder();
+
+        String[] endpoints = {
+                "/api/metrics/free-spots-today",
+                "/api/metrics/free-spots-3-days",
+                "/api/metrics/occupancy-by-weekday",
+                "/api/metrics/occupancy-by-month",
+                "/api/metrics/occupancy-by-month-day"
+        };
+
+        String[] labels = {
+                "Free Spots Today",
+                "Free Spots Last 3 Days",
+                "Occupancy by Weekday",
+                "Occupancy by Month",
+                "Occupancy by Month Day"
+        };
+
+        for (Store store : stores) {
+            String ip = store.getIpAddress();
+
+            for (int i = 0; i < endpoints.length; i++) {
+                String endpoint = endpoints[i];
+                String label = labels[i];
+                String url = ip + endpoint;
+
+                try {
+                    String csv = retrieveData(url); // This calls WebClient and fetches the CSV
+                    csvBuilder.append("Store: ").append(store.getStoreName()).append("\n");
+                    csvBuilder.append("Metric: ").append(label).append("\n");
+                    csvBuilder.append(csv).append("\n\n");
+                } catch (Exception e) {
+                    System.err.println("Failed to fetch " + label + " for store " + store.getStoreName() + ": " + e.getMessage());
+                }
+            }
+        }
+        return csvBuilder.toString();
+
     }
 }

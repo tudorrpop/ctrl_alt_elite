@@ -1,13 +1,9 @@
 package smartParkSwarm.backend.SmartParkSwarm_Back.controller;
 
-import jakarta.annotation.PostConstruct;
-
-import org.springframework.boot.info.SslInfo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.request.StoreRequest;
-import smartParkSwarm.backend.SmartParkSwarm_Back.model.response.ParkingSpotStatus;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.response.StoreModel;
 import smartParkSwarm.backend.SmartParkSwarm_Back.model.response.StoreOverviewModel;
 
