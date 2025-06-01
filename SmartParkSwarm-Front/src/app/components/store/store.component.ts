@@ -17,6 +17,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ChartModule } from 'primeng/chart';
 import { StatsService } from '../../services/stats/stats.service';
 import { SpotInfo } from '../../data/statistics/spot-info.model';
+import { environment } from '../../../environments/environment';
 
 interface Report {
     name: string;
@@ -45,6 +46,7 @@ interface Report {
 
 export class StoreComponent implements OnInit {
 
+  apiUrl = environment.apiUrl;
   store: StoreModel = {} as StoreModel;
   eventSource!: EventSource;
   svgContent: string = '';
@@ -72,32 +74,36 @@ export class StoreComponent implements OnInit {
     private statsService: StatsService
   ) { }
 
-ngOnInit(): void {
-  this.route.paramMap.subscribe((params) => {
-    const storeId = params.get('storeId');
-    if (storeId) {
-      this.storeService.fetchStore(+storeId).subscribe({
-        next: (storeModel) => {
-          this.store = storeModel;
+  ngOnInit(): void {
+    this.route.paramMap.subscribe((params) => {
+      const storeId = params.get('storeId');
+      if (storeId) {
+        this.storeService.fetchStore(+storeId).subscribe({
+          next: (storeModel) => {
+            this.store = storeModel;
 
-          this.http.get(storeModel.parkingLayoutPath.toString(), { responseType: 'text' }).subscribe({
-            next: (svg) => {
-              const container = document.getElementById('svg-container');
-              if (container) {
-                container.innerHTML = svg;
+            this.http.get(storeModel.parkingLayoutPath.toString(), { responseType: 'text' }).subscribe({
+              next: (svg) => {
+                const container = document.getElementById('svg-container');
+                if (container) {
+                  container.innerHTML = svg;
 
-                console.log(this.store.storeId);
-                this.storeService.initialParkingLotStatus(this.store.storeId).subscribe({
-                  next: (statuses) => {
-                    this.updateParkingSpotColors(statuses);
-                  }
-                });
+                  console.log(this.store.storeId);
+                  this.storeService.initialParkingLotStatus(this.store.storeId).subscribe({
+                    next: (statuses) => {
+                      this.updateParkingSpotColors(statuses);
+                    }
+                  });
 
-                
-                this.eventSource = new EventSource('http://localhost:8083/sse');
-                this.eventSource.addEventListener('message', (event: MessageEvent) => {
-                  this.updateParkingSpotColors(JSON.parse(event.data));
-                });
+
+                  this.eventSource = new EventSource(`${this.apiUrl}/sse`);
+                  this.eventSource.addEventListener('message', (event: MessageEvent) => {
+                    this.updateParkingSpotColors(JSON.parse(event.data));
+                  });
+                }
+              },
+              error: () => {
+                console.error('Failed to load SVG');
               }
             },
             error: () => {
@@ -118,7 +124,7 @@ ngOnInit(): void {
   });
 
     // ParkinLot UPDATES
-    this.eventSource = new EventSource('http://localhost:8083/sse');
+    this.eventSource = new EventSource(`${this.apiUrl}/sse`);
     this.eventSource.addEventListener('message', (event: MessageEvent) => {
       this.updateParkingSpotColors(JSON.parse(event.data));
     });

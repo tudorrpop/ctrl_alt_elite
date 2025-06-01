@@ -63,6 +63,7 @@ def containerapp_creator(req: func.HttpRequest) -> func.HttpResponse:
                     "container_image": {"value": container_image},
                     "container_name": {"value": container_name},
                     "registry_server": {"value": registry_server},
+                    "runserver": {"value": ("0.0.0.0:" + str(target_port))}
                 },
                 "mode": DeploymentMode.incremental
             }

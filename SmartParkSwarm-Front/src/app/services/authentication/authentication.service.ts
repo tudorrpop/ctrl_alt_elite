@@ -4,20 +4,22 @@ import { CookieService } from 'ngx-cookie-service';
 import { UserOverviewModel } from '../../data/model/user-overview.model';
 import { AuthenticationRequest } from '../../data/request/authentication.request';
 import { catchError, Observable, tap, throwError } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
 
-  private baseUrl = 'http://localhost:8083';
+  private baseUrl = environment.apiUrl;
 
   constructor(
     private httpClient: HttpClient,
     private cookieService: CookieService,
-  ) {}
+  ) { }
 
   public createUser(authenticationRequest: AuthenticationRequest): Observable<UserOverviewModel> {
+    console.log(this.baseUrl);
     return this.httpClient.post<UserOverviewModel>(
       `${this.baseUrl}/register`, authenticationRequest
     ).pipe(
