@@ -43,17 +43,51 @@
       </div>
     </div>
 
-    <div class="store-content">
-      <div class="parking-layout">
-        <div id="svg-container"></div>
-      </div>
+    <div class="tabs">
+      <p-tabs value="0">
+        <p-tablist>
+            <p-tab value="0">
+                <i class="pi pi-objects-column"></i>
+                <span class="font-bold whitespace-nowrap">Parking Occupancy</span>
+            </p-tab>
+            <p-tab value="1">
+                <i class="pi pi-chart-bar"></i>
+                <span class="font-bold whitespace-nowrap">Stats</span>
+            </p-tab>
+        </p-tablist>
 
-      <!-- <p-divider layout="vertical" />
+      <p-tabpanels>
+          <p-tabpanel value="0">
+          <div class="parking-layout">
+            <div id="svg-container"></div>
+        </div>
+      </p-tabpanel>
 
-            <div class="store-data">
-                <p>Capacity: 90%</p>
-                <p>Parking lots: 100</p>
-            </div> -->
+        <p-tabpanel value="1">   
+          <div class="stats">
+            <div class="stats-buttons">
+              <p-dropdown
+                [options]="cities"
+                [(ngModel)]="selectedCity"
+                optionLabel="name"
+                placeholder="Report Type"
+                [showClear]="true"
+                [filter]="true"
+                icon="pi pi-trash"
+                iconPos="pi-arrow-circle-left">
+              </p-dropdown>
+              <p-button label="Retrieve" variant="outlined" severity="success" />
+            </div>
+
+            <div class="stats-content">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit nulla iste ipsa eius commodi cupiditate inventore eaque amet, aut pariatur nemo ea iusto aliquid blanditiis et dicta ducimus suscipit. Esse!
+            </div>
+          </div>
+        </p-tabpanel>
+
+      </p-tabpanels>
+    </p-tabs>
+  
     </div>
   </div>
 </div>

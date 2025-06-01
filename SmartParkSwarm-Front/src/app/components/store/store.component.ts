@@ -10,6 +10,15 @@ import { ParkingSpotStatus } from '../../data/model/parking-spot-status.model';
 import { DialogService } from 'primeng/dynamicdialog';
 import { StoreCreationComponent } from '../dialog/store-creation/store-creation.component';
 import { HttpClient } from '@angular/common/http';
+import { TabsModule } from 'primeng/tabs';
+import { SelectModule} from 'primeng/select';
+import { FormsModule } from '@angular/forms';
+import { DropdownModule } from 'primeng/dropdown';
+
+interface City {
+    name: string;
+    code: string;
+}
 
 @Component({
   selector: 'app-store',
@@ -17,7 +26,11 @@ import { HttpClient } from '@angular/common/http';
   imports: [
     NavbarComponent,
     ButtonModule,
-    DividerModule
+    DividerModule,
+    TabsModule,
+    SelectModule,
+    FormsModule,
+    DropdownModule
   ],
   providers: [
     DialogService
@@ -25,11 +38,22 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './store.component.html',
   styleUrl: './store.component.scss'
 })
+
 export class StoreComponent implements OnInit {
 
   store: StoreModel = {} as StoreModel;
   eventSource!: EventSource;
   svgContent: string = '';
+
+  cities: City[] | undefined = [
+            { name: 'New York', code: 'NY' },
+            { name: 'Rome', code: 'RM' },
+            { name: 'London', code: 'LDN' },
+            { name: 'Istanbul', code: 'IST' },
+            { name: 'Paris', code: 'PRS' }
+        ];
+
+  selectedCity: City | undefined;
 
   constructor(
     private storeService: StoreService,
