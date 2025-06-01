@@ -5,6 +5,8 @@ from django import http
 from .models import ParkingLot, ParkingSpot, VehicleEntry
 from .serializers import ParkingLotSerializer, ParkingSpotSerializer, VehicleEntrySerializer
 import os
+import csv
+import json
 from .orchestrator import orchestratorservice
 
 class ParkingLotSetup(generics.CreateAPIView):
@@ -175,10 +177,15 @@ class MetricFileView(views.APIView):
     """
 
     def get(self, request, metric_name):
-        print(metric_name)
+        if metric_name == "free-spots-current":
+            total_free = ParkingSpot.objects.filter(is_occupied=False).count()
+            return response.Response(
+                {"free_spots": total_free},
+                status=status.HTTP_200_OK
+            )
+        
         base_dir = os.path.dirname(os.path.abspath(__file__))
         file_path = os.path.join(base_dir, '..', 'metrics', f'{metric_name}.csv')
-        print(file_path)
 
         if not os.path.exists(file_path):
             return response.Response(
@@ -186,11 +193,14 @@ class MetricFileView(views.APIView):
                 status=status.HTTP_404_NOT_FOUND
             )
 
-        with open(file_path, 'r') as file:
-            csv_data = file.read()
+        with open(file_path, mode='r', newline='', encoding='utf-8') as csvfile:
+            data = list(csv.DictReader(csvfile))
+    
+        json_content = json.dumps(data, indent=4)
+        parsed_json = json.loads(json_content)
 
         return response.Response(
-            csv_data,
-            content_type='text/csv',
+            parsed_json,
+            # content_type='text/json',
             status=status.HTTP_200_OK
         )

@@ -51,7 +51,7 @@ def calculate_metrics(df, metric, total_spots):
 
     if metric == 'free-spots-today':
         today = now.date()
-        hours = pd.date_range(start=datetime.combine(today, datetime.min.time(), tzinfo=timezone.utc), end=now, freq='h')
+        hours = pd.date_range(start=datetime.combine(today, datetime.min.time(), tzinfo=timezone.utc), end=(now), freq='h')
         result = []
 
         for hour in hours:
