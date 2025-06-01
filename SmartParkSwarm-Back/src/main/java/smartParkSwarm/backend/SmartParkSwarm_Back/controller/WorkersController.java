@@ -100,5 +100,10 @@ public class WorkersController {
         return ResponseEntity.ok(workerService.returnMonthlyStatistics());
     }
 
+    @GetMapping(value = "/worker/chatprompt", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> getChatPrompt() throws Exception {
+        return ResponseEntity.ok(workerService.getAnswer());
+    }
+
 
 }
