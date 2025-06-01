@@ -8,7 +8,7 @@ import smartParkSwarm.backend.SmartParkSwarm_Back.model.response.CustomerModel;
 import smartParkSwarm.backend.SmartParkSwarm_Back.service.UserService;
 import java.util.List;
 
-@CrossOrigin(origins = {"http://localhost:8100", "http://192.168.1.128:8100"})
+@CrossOrigin(origins = {"http://localhost:8100", "http://192.168.1.128:8100", "http://smartparkswarm.calmflower-ba6d4ee3.polandcentral.azurecontainerapps.io:4200"})
 @RestController
 public class UserController {
 

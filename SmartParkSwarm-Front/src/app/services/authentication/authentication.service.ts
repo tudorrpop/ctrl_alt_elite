@@ -19,6 +19,7 @@ export class AuthenticationService {
   ) { }
 
   public createUser(authenticationRequest: AuthenticationRequest): Observable<UserOverviewModel> {
+    console.log(this.baseUrl);
     return this.httpClient.post<UserOverviewModel>(
       `${this.baseUrl}/register`, authenticationRequest
     ).pipe(

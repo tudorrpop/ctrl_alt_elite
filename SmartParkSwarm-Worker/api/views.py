@@ -23,7 +23,7 @@ class ParkingLotSetup(generics.CreateAPIView):
         ip = x_forwarded_for.split(',')[0] if x_forwarded_for else request.META.get('REMOTE_ADDR')
 
         data = request.data.copy()
-        data['orchestrator_ip'] = ip
+        data['orchestrator_ip'] = "orchestrator.calmflower-ba6d4ee3.polandcentral.azurecontainerapps.io"
 
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)

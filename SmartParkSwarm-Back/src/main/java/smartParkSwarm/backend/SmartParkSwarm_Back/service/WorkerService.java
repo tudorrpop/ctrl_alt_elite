@@ -49,20 +49,21 @@ public class WorkerService {
     public StoreOverviewModel setupWorker(StoreRequest storeRequest) throws InterruptedException {
 
         //lambda from Azure call
-        Integer exportPort =  ThreadLocalRandom.current().nextInt(8000, 9000);
+        Integer port =  ThreadLocalRandom.current().nextInt(8000, 9000);
         Map<String, Object> requestBodyAzureFunction = Map.of(
                 "name", storeRequest.getStoreName().toLowerCase(),
-                "targetPort", 8000,
-                "exposedPort",exportPort,
+                "targetPort", port,
+                "exposedPort",port,
                 "containerName", storeRequest.getStoreName().toLowerCase() + "container"
         );
-        //String storeFQDN = callAzureFunction("createworkers.azurewebsites.net", "/api/containerapp_creator", requestBodyAzureFunction, String.class).block() + ":8000";
-        //String fullFQDNandPort = storeFQDN.substring(0, storeFQDN.length() - 5)+ ":"+ exportPort;
+        String storeFQDN = callAzureFunction("createworkers.azurewebsites.net", "/api/containerapp_creator", requestBodyAzureFunction, String.class).block() + ":8000";
+        // String fullFQDNandPort = storeFQDN.substring(0, storeFQDN.length() - 5)+ ":"+ port;
+        String fullFQDNandPort = storeRequest.getStoreName().toLowerCase() + ":" + port;
 
         //this is used to create a worker locally. to to be set back to azure function later
-        String  fullFQDNandPort = "127.0.0.1:8000";
+        // String  fullFQDNandPort = "127.0.0.1:8000";
 
-        //Thread.sleep(45000);
+        Thread.sleep(45000);
 
         Store store = storeService.saveStore(storeRequest, fullFQDNandPort);
 
@@ -122,7 +123,7 @@ public class WorkerService {
         return webClient.post()
                 .uri("https://" + ipaddress + endpoint)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .header("x-functions-key", "x-functions-key for azure function")
+                .header("x-functions-key", "VALUE")
                 .bodyValue(requestBody)
                 .retrieve()
                 .bodyToMono(clazz);

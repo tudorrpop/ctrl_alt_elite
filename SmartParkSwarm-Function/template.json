@@ -25,6 +25,9 @@
         },
         "registry_server": {
             "type": "String"
+        },
+        "runserver": {
+            "type": "String"
         }
     },
     "variables": {},
@@ -73,6 +76,14 @@
                         {
                             "image": "[parameters('container_image')]",
                             "name": "[parameters('container_name')]",
+                            "command": [
+                                "python3"
+                            ],
+                            "args": [
+                                "manage.py",
+                                "runserver",
+                                "[parameters('runserver')]"
+                            ],
                             "resources": {
                                 "cpu": 0.25,
                                 "memory": "0.5Gi"
