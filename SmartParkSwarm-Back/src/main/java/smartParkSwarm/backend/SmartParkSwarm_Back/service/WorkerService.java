@@ -54,7 +54,7 @@ public class WorkerService {
         //this is used to create a worker locally. to to be set back to azure function later
          String  fullFQDNandPort = "127.0.0.1:8000";
 
-        Thread.sleep(45000);
+        // Thread.sleep(45000);
 
         Store store = storeService.saveStore(storeRequest, fullFQDNandPort);
 
