@@ -15,7 +15,11 @@
     {{ isLogin ? 'Login' : 'Register' }}
   </ion-button>
 
-  <ion-button expand="block" fill="clear" (click)="isLogin = !isLogin">
+  <ion-button expand="block" fill="clear" (click)="isLogin = !isLogin" style="margin-bottom: 140px">
     Switch to {{ isLogin ? 'Register' : 'Login' }}
   </ion-button>
+
+  <div>
+    <img src="assets/icon/logo_navbar_2.png" alt="logo">
+  </div>
 </ion-content>

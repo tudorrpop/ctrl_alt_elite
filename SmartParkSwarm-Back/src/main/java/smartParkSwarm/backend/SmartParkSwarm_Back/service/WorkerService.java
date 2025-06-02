@@ -262,16 +262,12 @@ public class WorkerService {
         StringBuilder csvBuilder = new StringBuilder();
 
         String[] endpoints = {
-                "/api/metrics/free-spots-today",
-                "/api/metrics/free-spots-3-days",
                 "/api/metrics/occupancy-by-weekday",
                 "/api/metrics/occupancy-by-month",
                 "/api/metrics/occupancy-by-month-day"
         };
 
         String[] labels = {
-                "Free Spots Today",
-                "Free Spots Last 3 Days",
                 "Occupancy by Weekday",
                 "Occupancy by Month",
                 "Occupancy by Month Day"

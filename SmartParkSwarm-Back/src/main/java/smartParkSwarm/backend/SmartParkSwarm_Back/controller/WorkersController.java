@@ -101,8 +101,11 @@ public class WorkersController {
     }
 
     @GetMapping(value = "/worker/chatprompt", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> getChatPrompt() throws Exception {
-        return ResponseEntity.ok(workerService.getAnswer());
+    public ResponseEntity<ChatResponse> getChatPrompt() throws Exception {
+        String value = workerService.getAnswer();
+        return ResponseEntity.ok(
+                new ChatResponse("context", value)
+        );
     }
 
 

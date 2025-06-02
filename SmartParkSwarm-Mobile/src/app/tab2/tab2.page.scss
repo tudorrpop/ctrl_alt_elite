@@ -1,18 +1,45 @@
-ion-textarea {
-  font-size: 15px;
+.chat-content {
+  --padding-top: 0;
+  --padding-bottom: 80px; // space for footer
+  background: #f2f2f2;
 }
 
-.answer-container {
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 15px;
-  margin-top: 30px;
-  line-height: 1.5;
-
-  #think {
-    border-left: 3px solid #eee;
-    padding-left: 9px;
-    color: #aaa;
-    font-style: italic;
-  }
+.chat-history {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  margin-top: 36px;
 }
- 
+
+.chat-bubble {
+  max-width: 80%;
+  padding: 10px 14px;
+  border-radius: 16px;
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+
+.user-msg {
+  align-self: flex-end;
+  background-color: #2bc491;
+  color: white;
+  border-bottom-right-radius: 0;
+}
+
+.assistant-msg {
+  align-self: flex-start;
+  background-color: #bfbfbf;
+  color: #000;
+  border-bottom-left-radius: 0;
+}
+
+ion-footer {
+  --background: #fff;
+  border-top: 1px solid #ccc;
+}
+
+.chat-input {
+  width: 100%;
+  padding: 8px 12px;
+}
