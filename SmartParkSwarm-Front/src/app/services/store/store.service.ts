@@ -64,7 +64,6 @@ export class StoreService {
 
   public initialParkingLotStatus(id: number): Observable<ParkingSpotStatus[]> {
     const headers = this.getAuthHeaders();
-    console.log(id);
 
     // const params = new HttpParams().set('id', id);
 

@@ -83,12 +83,12 @@
                     </p-tabpanel>
                     <p-tabpanel value="2" class="chart-tab">
                         <div class="chart">
-                            <p-chart
+                            <!-- <p-chart
                                 type="line"
                                 [data]="data"
                                 [options]="options"
                                 style="flex: 1;"
-                            />
+                            /> -->
                         </div>
                     </p-tabpanel>
 
@@ -97,8 +97,7 @@
                             height="100vh"
                             width="100%"
                             [zoom]="zoom"
-                            [center]="mapCenter"
-                            >
+                            [center]="mapCenter">
                             <map-marker
                                 *ngFor="let marker of markers"
                                 [position]="marker.position"
