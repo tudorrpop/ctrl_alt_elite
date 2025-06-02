@@ -16,8 +16,8 @@ import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { ChartModule } from 'primeng/chart';
 import { StatsService } from '../../services/stats/stats.service';
-import { SpotInfo } from '../../data/statistics/spot-info.model';
 import { environment } from '../../../environments/environment';
+import { CommonModule } from '@angular/common';
 
 interface Report {
     name: string;
@@ -35,7 +35,8 @@ interface Report {
     SelectModule,
     FormsModule,
     DropdownModule,
-    ChartModule
+    ChartModule,
+    CommonModule
   ],
   providers: [
     DialogService
@@ -47,6 +48,7 @@ interface Report {
 export class StoreComponent implements OnInit {
 
   apiUrl = environment.apiUrl;
+
   store: StoreModel = {} as StoreModel;
   eventSource!: EventSource;
   svgContent: string = '';
@@ -74,36 +76,32 @@ export class StoreComponent implements OnInit {
     private statsService: StatsService
   ) { }
 
-  ngOnInit(): void {
-    this.route.paramMap.subscribe((params) => {
-      const storeId = params.get('storeId');
-      if (storeId) {
-        this.storeService.fetchStore(+storeId).subscribe({
-          next: (storeModel) => {
-            this.store = storeModel;
+ngOnInit(): void {
+  this.route.paramMap.subscribe((params) => {
+    const storeId = params.get('storeId');
+    if (storeId) {
+      this.storeService.fetchStore(+storeId).subscribe({
+        next: (storeModel) => {
+          this.store = storeModel;
 
-            this.http.get(storeModel.parkingLayoutPath.toString(), { responseType: 'text' }).subscribe({
-              next: (svg) => {
-                const container = document.getElementById('svg-container');
-                if (container) {
-                  container.innerHTML = svg;
+          this.http.get(storeModel.parkingLayoutPath.toString(), { responseType: 'text' }).subscribe({
+            next: (svg) => {
+              const container = document.getElementById('svg-container');
+              if (container) {
+                container.innerHTML = svg;
 
-                  console.log(this.store.storeId);
-                  this.storeService.initialParkingLotStatus(this.store.storeId).subscribe({
-                    next: (statuses) => {
-                      this.updateParkingSpotColors(statuses);
-                    }
-                  });
+                console.log(this.store.storeId);
+                this.storeService.initialParkingLotStatus(this.store.storeId).subscribe({
+                  next: (statuses) => {
+                    this.updateParkingSpotColors(statuses);
+                  }
+                });
 
-
-                  this.eventSource = new EventSource(`${this.apiUrl}/sse`);
-                  this.eventSource.addEventListener('message', (event: MessageEvent) => {
-                    this.updateParkingSpotColors(JSON.parse(event.data));
-                  });
-                }
-              },
-              error: () => {
-                console.error('Failed to load SVG');
+                
+                this.eventSource = new EventSource(`${this.apiUrl}/sse`);
+                this.eventSource.addEventListener('message', (event: MessageEvent) => {
+                  this.updateParkingSpotColors(JSON.parse(event.data));
+                });
               }
             },
             error: () => {
@@ -157,6 +155,7 @@ export class StoreComponent implements OnInit {
   }
 
   public updateStore(): void {
+    console.log(this.store.parkingLayoutPath);
     const ref = this.dialogService.open(StoreCreationComponent, {
       closable: true,
       modal: true,
@@ -172,8 +171,8 @@ export class StoreComponent implements OnInit {
 
             this.messageService.add({
               severity: 'success',
-              summary: 'Created Store!',
-              detail: `Created store ${response.storeName} successfully.`,
+              summary: 'Updated Store!',
+              detail: `Updated store ${response.storeName} successfully.`,
             });
           },
         });
@@ -183,6 +182,7 @@ export class StoreComponent implements OnInit {
   }
 
   public fetchReport(): void {
+    console.log("adasdas");
   switch (this.selectedCity?.type) {
     case 'last-3-days':
       this.statsService.fetchLastThreeDays(this.store.storeId).subscribe({

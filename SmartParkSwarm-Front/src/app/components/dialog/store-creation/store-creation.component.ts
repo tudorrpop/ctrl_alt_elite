@@ -49,7 +49,7 @@ export class StoreCreationComponent implements OnInit{
     if (this.config.data && this.config.data.storeModel) {
       this.storeName = this.config.data.storeModel.storeName;
       this.storeAddress = this.config.data.storeModel.storeAddress;
-      this.parkingLayout = this.config.data.storeModel.parkingLayout;
+      this.parkingLayout = this.getParkingLayout(this.config.data.storeModel.parkingLayoutPath);
       this.id = this.config.data.storeModel.id;
       this.edit = true;
     } else {
@@ -76,5 +76,18 @@ export class StoreCreationComponent implements OnInit{
       storeAddress: this.storeAddress,
       parkingLayout: this.parkingLayout
     } as StoreRequest);
+  }
+
+  private getParkingLayout(parkingLayoutPath: string): string {
+    console.log(parkingLayoutPath);
+    if (parkingLayoutPath === "/parking_layout_svg/parking_layout_1.svg") {
+      return "Grid";
+    }else if (parkingLayoutPath === "/parking_layout_svg/parking_layout_2.svg") {
+      return "Stripe";
+    } else if (parkingLayoutPath === "/parking_layout_svg/parking_layout_3.svg") {
+      return "Greenway";
+    } else {
+      return "";
+    }
   }
 }

@@ -65,7 +65,7 @@
 
         <p-tabpanel value="1">   
           <div class="stats">
-            <div class="stats-buttons">
+            <div style="height: 100px;" class="stats-buttons">
               <p-dropdown
                 [options]="cities"
                 [(ngModel)]="selectedCity"
@@ -75,16 +75,12 @@
               </p-dropdown>
               <button pButton class="p-button-outlined" label="Retrieve" icon="pi pi-cog" iconPos="right" severity="success" (click)="fetchReport()"></button>
             </div>
-
             <div class="stats-content">
-              <div class="chart">
-                <p-chart
-                    type="line"
-                    [data]="data"
-                    [options]="options"
-                    style="flex: 1;"
-                />
-              </div>
+              <!-- <p-chart
+                  type="line"
+                  [data]="data"
+                  [options]="options"
+                  style="height: 100%; width: 100%;"/> -->
             </div>
           </div>
         </p-tabpanel>
