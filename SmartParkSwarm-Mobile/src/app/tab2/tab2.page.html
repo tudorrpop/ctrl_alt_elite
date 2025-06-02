@@ -9,10 +9,29 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Smart Chat</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="ion-padding chat-content">
+  <div class="chat-history">
+    <div *ngFor="let msg of history" [ngClass]="{'user-msg': msg.role === 'user', 'assistant-msg': msg.role === 'assistant'}" class="chat-bubble">
+      <div [innerHTML]="converter.makeHtml(msg.content)"></div>
+    </div>
+    <div *ngIf="answer" class="chat-bubble assistant-msg">
+      <div [innerHTML]="answer"></div>
+    </div>
+  </div>
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-textarea
+      [(ngModel)]="question"
+      placeholder="Type your message..."
+      autoGrow="true"
+      class="chat-input">
+    </ion-textarea>
+    <ion-buttons slot="end">
+      <ion-button (click)="run()" [disabled]="!question.trim()">
+        <ion-icon aria-hidden="true" slot="icon-only" name="paper-plane-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>
