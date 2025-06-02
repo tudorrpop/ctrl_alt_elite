@@ -9,10 +9,12 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Smart Chat</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="ion-padding">
+  <ion-textarea
+    placeholder="Ask your question..."
+    [(ngModel)]="question"
+    autoGrow="true">
+  </ion-textarea>
+  <ion-button expand="full" (click)="run()">Ask!</ion-button>
+  <div [innerHTML]="answer" class="answer-container"></div>
 </ion-content>
