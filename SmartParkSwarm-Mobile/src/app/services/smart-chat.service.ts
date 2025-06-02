@@ -3,12 +3,13 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {StorageService} from "./storage.service";
 import {Observable} from "rxjs";
 import {IUser} from "./user.service";
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SmartChatService {
-  private apiUrl: string = 'http://localhost:8083';
+  private apiUrl: string = environment.apiUrl;
 
   constructor(private httpClient: HttpClient, private storageService: StorageService) { }
 

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {StorageService} from "./storage.service";
+import { environment } from 'src/environments/environment';
 
 export interface IUser {
   userId: number;
@@ -20,7 +21,7 @@ export interface IUser {
 })
 export class UserService {
 
-  private apiUrl: string = 'http://localhost:8083';
+  private apiUrl: string = environment.apiUrl;
 
   constructor(private httpClient: HttpClient, private storageService: StorageService) { }
 

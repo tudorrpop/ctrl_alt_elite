@@ -1,0 +1,84 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "containerapps_orchestrator_name": {
+            "defaultValue": "orchestrator",
+            "type": "String"
+        },
+        "managedEnvironments_managedEnvironment_testsmpw_externalid": {
+            "defaultValue": "/subscriptions/9a141ccc-d5d1-4154-ac71-377516b18655/resourceGroups/test-smpw/providers/Microsoft.App/managedEnvironments/managedEnvironment-testsmpw",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.App/containerapps",
+            "apiVersion": "2025-01-01",
+            "name": "[parameters('containerapps_orchestrator_name')]",
+            "location": "Poland Central",
+            "identity": {
+                "type": "None"
+            },
+            "properties": {
+                "managedEnvironmentId": "[parameters('managedEnvironments_managedEnvironment_testsmpw_externalid')]",
+                "environmentId": "[parameters('managedEnvironments_managedEnvironment_testsmpw_externalid')]",
+                "workloadProfileName": "Consumption",
+                "configuration": {
+                    "activeRevisionsMode": "Single",
+                    "ingress": {
+                        "external": true,
+                        "targetPort": 8083,
+                        "exposedPort": 8083,
+                        "transport": "Tcp",
+                        "traffic": [
+                            {
+                                "weight": 100,
+                                "latestRevision": true
+                            }
+                        ],
+                        "allowInsecure": false,
+                        "stickySessions": {
+                            "affinity": "none"
+                        }
+                    },
+                    "registries": [
+                        {
+                            "server": "testmultipleworkersregistry.azurecr.io",
+                            "identity": "system-environment"
+                        }
+                    ],
+                    "maxInactiveRevisions": 100,
+                    "identitySettings": []
+                },
+                "template": {
+                    "containers": [
+                        {
+                            "image": "[concat('testmultipleworkersregistry.azurecr.io/', parameters('containerapps_orchestrator_name'), ':latest')]",
+                            "name": "[parameters('containerapps_orchestrator_name')]",
+                            "env": [
+                                {
+                                    "name": "MYSQL_HOST",
+                                    "value": "[concat(parameters('containerapps_orchestrator_name'), '-db')]"
+                                }
+                            ],
+                            "resources": {
+                                "cpu": 0.75,
+                                "memory": "1.5Gi"
+                            },
+                            "probes": []
+                        }
+                    ],
+                    "scale": {
+                        "minReplicas": 1,
+                        "maxReplicas": 1,
+                        "cooldownPeriod": 300,
+                        "pollingInterval": 30
+                    },
+                    "volumes": []
+                }
+            }
+        }
+    ]
+}
