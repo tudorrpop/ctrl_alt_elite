@@ -1,0 +1,80 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "containerapps_orchestrator_db_name": {
+            "defaultValue": "orchestrator-db",
+            "type": "String"
+        },
+        "managedEnvironments_managedEnvironment_testsmpw_externalid": {
+            "defaultValue": "/subscriptions/9a141ccc-d5d1-4154-ac71-377516b18655/resourceGroups/test-smpw/providers/Microsoft.App/managedEnvironments/managedEnvironment-testsmpw",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.App/containerapps",
+            "apiVersion": "2025-01-01",
+            "name": "[parameters('containerapps_orchestrator_db_name')]",
+            "location": "Poland Central",
+            "identity": {
+                "type": "None"
+            },
+            "properties": {
+                "managedEnvironmentId": "[parameters('managedEnvironments_managedEnvironment_testsmpw_externalid')]",
+                "environmentId": "[parameters('managedEnvironments_managedEnvironment_testsmpw_externalid')]",
+                "workloadProfileName": "Consumption",
+                "configuration": {
+                    "activeRevisionsMode": "Single",
+                    "ingress": {
+                        "external": false,
+                        "targetPort": 3306,
+                        "exposedPort": 3306,
+                        "transport": "Tcp",
+                        "traffic": [
+                            {
+                                "weight": 100,
+                                "latestRevision": true
+                            }
+                        ],
+                        "allowInsecure": false,
+                        "stickySessions": {
+                            "affinity": "none"
+                        }
+                    },
+                    "maxInactiveRevisions": 100,
+                    "identitySettings": []
+                },
+                "template": {
+                    "containers": [
+                        {
+                            "image": "docker.io/mysql:8",
+                            "name": "[parameters('containerapps_orchestrator_db_name')]",
+                            "env": [
+                                {
+                                    "name": "MYSQL_ROOT_PASSWORD",
+                                    "value": "2001"
+                                },
+                                {
+                                    "name": "MYSQL_DATABASE",
+                                    "value": "SmartParkSwarm"
+                                }
+                            ],
+                            "resources": {
+                                "cpu": 0.5,
+                                "memory": "1Gi"
+                            }
+                        }
+                    ],
+                    "scale": {
+                        "minReplicas": 1,
+                        "maxReplicas": 1,
+                        "cooldownPeriod": 300,
+                        "pollingInterval": 30
+                    }
+                }
+            }
+        }
+    ]
+}

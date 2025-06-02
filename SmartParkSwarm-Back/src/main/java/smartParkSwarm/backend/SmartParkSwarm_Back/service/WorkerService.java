@@ -47,14 +47,14 @@ public class WorkerService {
                 "exposedPort",port,
                 "containerName", storeRequest.getStoreName().toLowerCase() + "container"
         );
-        //String storeFQDN = callAzureFunction("createworkers.azurewebsites.net", "/api/containerapp_creator", requestBodyAzureFunction, String.class).block() + ":8000";
+        String storeFQDN = callAzureFunction("createworkers.azurewebsites.net", "/api/containerapp_creator", requestBodyAzureFunction, String.class).block() + ":8000";
         // String fullFQDNandPort = storeFQDN.substring(0, storeFQDN.length() - 5)+ ":"+ port;
-        //String fullFQDNandPort = storeRequest.getStoreName().toLowerCase() + ":" + port;
+        String fullFQDNandPort = storeRequest.getStoreName().toLowerCase() + ":" + port;
 
         //this is used to create a worker locally. to to be set back to azure function later
-         String  fullFQDNandPort = "127.0.0.1:8000";
+        //  String  fullFQDNandPort = "127.0.0.1:8000";
 
-        // Thread.sleep(45000);
+        Thread.sleep(45000);
 
         Store store = storeService.saveStore(storeRequest, fullFQDNandPort);
 
@@ -114,7 +114,7 @@ public class WorkerService {
         return webClient.post()
                 .uri("https://" + ipaddress + endpoint)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .header("x-functions-key", "VALUE")
+                .header("x-functions-key", "######")
                 .bodyValue(requestBody)
                 .retrieve()
                 .bodyToMono(clazz);

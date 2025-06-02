@@ -7,13 +7,14 @@ import { SpotInfo } from '../../data/statistics/spot-info.model';
 import { WeekdayOcuppancy } from '../../data/statistics/weekday-occupancy.model';
 import { MonthDayOcuppancy } from '../../data/statistics/monthday-occupancy.model';
 import { MonthOcuppancy } from '../../data/statistics/month-occupancy.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StatsService {
 
-  private baseUrl = "http://localhost:8083";
+  private baseUrl = environment.apiUrl;
 
   constructor(
     private httpClient: HttpClient,

@@ -53,7 +53,7 @@ public class SecurityConfiguration {
         return (HttpServletRequest request, HttpServletResponse response,
                 org.springframework.security.core.AuthenticationException authException) -> {
             String origin = request.getHeader("Origin");
-            if ("http://localhost:4200" .equals(origin) || "http://localhost:8100" .equals(origin) || "http://smartparkswarm.calmflower-ba6d4ee3.polandcentral.azurecontainerapps.io:4200" .equals(origin)) {
+            if ("http://localhost:4200" .equals(origin) || "http://localhost:8100" .equals(origin) || "http://smartparkswarm.salmonpebble-d8e2875c.polandcentral.azurecontainerapps.io:4200" .equals(origin) || "http://mobile.salmonpebble-d8e2875c.polandcentral.azurecontainerapps.io:8100" .equals(origin)) {
                 response.setHeader("Access-Control-Allow-Origin", origin);
             }
             response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
@@ -68,7 +68,7 @@ public class SecurityConfiguration {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:4200", "http://localhost:8100", "http://smartparkswarm.calmflower-ba6d4ee3.polandcentral.azurecontainerapps.io:4200")
+                        .allowedOrigins("http://localhost:4200", "http://localhost:8100", "http://smartparkswarm.salmonpebble-d8e2875c.polandcentral.azurecontainerapps.io:4200", "http://mobile.salmonpebble-d8e2875c.polandcentral.azurecontainerapps.io:8100")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("Authorization", "Content-Type")
                         .allowCredentials(true); // Required for cookies

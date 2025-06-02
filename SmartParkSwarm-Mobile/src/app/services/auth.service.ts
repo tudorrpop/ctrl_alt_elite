@@ -4,12 +4,13 @@ import { catchError, Observable, tap, throwError } from 'rxjs';
 import { IAuthRequest } from '../models/i-auth-request.model';
 import { User } from '../models/i-user.model';
 import { StorageService } from './storage.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl: string = 'http://localhost:8083';
+  private apiUrl: string = environment.apiUrl;
 
   constructor(private http: HttpClient, private storageService: StorageService) {}
 
