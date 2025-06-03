@@ -34,9 +34,9 @@ Each component will be hosted on a specific server in order to provide modularit
 
 - **Servers:** Azure Services  
 - **Backend:** Spring Boot (Java)  
-- **Frontend:** Angular + NativeScript (TypeScript)  
+- **Frontend:** Angular + Ionic (TypeScript)  
 - **Database:** MySQL  
-- **AI Technologies:** LM Studio / Amazon Lex  
+- **AI Technologies:** Llama3
 - **Authentication:** JSON Web Tokens
 
 ## Commands to run the project
