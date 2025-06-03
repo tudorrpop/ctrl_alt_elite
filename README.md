@@ -43,6 +43,7 @@ Each component will be hosted on a specific server in order to provide modularit
 
 # Backend
 
+```sh
 cp -r . /home/ubuntu/src
 
 chmod +x /home/ubuntu/src/start-springapp.sh
@@ -63,9 +64,11 @@ source "$HOME/.sdkman/bin/sdkman-init.sh"
 mvn clean package
 
 /home/ubuntu/src/start-springapp.sh
+```
 
 # Frontend
 
+```sh
 cp -r . /home/ubuntu/src
 
 sudo apt update && sudo apt install -y curl
@@ -84,9 +87,11 @@ ng build --base-href / --configuration=production
 sudo npm install -g http-server
 
 http-server /home/ubuntu/src/dist/smart-park-swarm-front/browser -p 80 --spa index.html --proxy http://localhost?
+```
 
 # Mobile
 
+```sh
 cp -r . /home/ubuntu/src
 
 sudo apt update && sudo apt install -y curl
@@ -106,9 +111,11 @@ ng build --base-href / --configuration=production
 sudo npm install -g http-server
 
 http-server /home/ubuntu/src/www -p 80 --spa index.html --proxy http://localhost?
+```
 
 # Worker
 
+```sh
 cp -r . /home/ubuntu/src
 
 sudo apt update && sudo apt install -y python3 pip
@@ -120,3 +127,4 @@ pip install -r requirements.txt
 python3 manage.py migrate
 
 python3 manage.py runserver 0.0.0.0:8000
+```
